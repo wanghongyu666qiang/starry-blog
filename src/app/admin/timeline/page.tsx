@@ -42,7 +42,7 @@ export default function AdminTimelinePage() {
 
   function updateEvent(index: number, field: keyof TimelineEvent, value: string) {
     const updated = [...events];
-    (updated[index] as Record<string, string>)[field] = value;
+    (updated[index] as unknown as Record<string, string>)[field] = value;
     setEvents(updated);
   }
 
