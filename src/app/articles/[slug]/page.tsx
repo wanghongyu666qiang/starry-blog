@@ -1,10 +1,26 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getPostBySlug, getPosts } from "@/lib/data";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { PostCard } from "@/components/PostCard";
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await getPostBySlug(slug);
+  if (!article) return { title: "文章未找到" };
+  return {
+    title: article.title,
+    description: article.description,
+    openGraph: {
+      title: article.title,
+      description: article.description,
+      type: "article",
+    },
+  };
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {

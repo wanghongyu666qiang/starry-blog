@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.110.1",
+    "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
     "katex": "^0.17.0",
     "mermaid": "^11.16.0",

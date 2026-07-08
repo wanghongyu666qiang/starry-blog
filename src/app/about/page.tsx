@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "关于",
+  description: "海南大学软件工程专业在读，基于海口。构建软件、阅读论文、撰写技术文章。",
+};
+
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 pt-24 pb-24">
@@ -6,7 +13,7 @@ export default function AboutPage() {
       {/* Introduction */}
       <section className="mt-12">
         <p className="text-text-secondary leading-relaxed">
-          我是海南大学计算机科学与技术专业的学生，现居海口。
+          我是海南大学软件工程专业的学生，现居海口。
           我构建软件、阅读论文、写技术文章来记录所学。
         </p>
         <p className="mt-4 text-text-secondary leading-relaxed">
@@ -21,7 +28,7 @@ export default function AboutPage() {
         <div className="mt-4 space-y-4">
           <div>
             <h3 className="text-text-primary font-medium">海南大学</h3>
-            <p className="text-sm text-text-secondary">计算机科学与技术 本科，2025 &ndash; 2029</p>
+            <p className="text-sm text-text-secondary">软件工程 本科，2025 &ndash; 2029</p>
             <p className="mt-1 text-sm text-text-tertiary">海甸校区，海口</p>
           </div>
         </div>

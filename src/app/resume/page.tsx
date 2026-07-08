@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "简历",
+  description: "在线简历 — 教育背景、项目经历、技能。",
+};
+
 export default function ResumePage() {
   return (
     <div className="mx-auto max-w-3xl px-6 pt-24 pb-24">
@@ -13,7 +20,7 @@ export default function ResumePage() {
             <h3 className="font-medium text-text-primary">海南大学</h3>
             <span className="text-sm text-text-tertiary">2025 &ndash; 2029</span>
           </div>
-          <p className="text-sm text-text-secondary">计算机科学与技术 本科</p>
+          <p className="text-sm text-text-secondary">软件工程 本科</p>
           <p className="mt-1 text-sm text-text-tertiary">海甸校区，海口</p>
         </div>
       </section>

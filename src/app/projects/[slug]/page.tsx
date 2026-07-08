@@ -1,10 +1,21 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProjectBySlug } from "@/lib/data";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
+  if (!project) return { title: "项目未找到" };
+  return {
+    title: project.title,
+    description: project.description,
+  };
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {

@@ -1,5 +1,11 @@
 import { getPosts } from "@/lib/data";
 import { PostCard } from "@/components/PostCard";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "文章",
+  description: "技术写作、学习笔记与项目文档。",
+};
 
 const CATEGORIES = ["全部", "研究", "工程", "算法", "前端", "思考"];
 
