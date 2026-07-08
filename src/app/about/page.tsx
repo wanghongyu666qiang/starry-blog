@@ -1,0 +1,93 @@
+export default function AboutPage() {
+  return (
+    <div className="mx-auto max-w-3xl px-6 pt-24 pb-24">
+      <h1 className="text-3xl font-semibold tracking-tight text-text-primary">关于</h1>
+
+      {/* Introduction */}
+      <section className="mt-12">
+        <p className="text-text-secondary leading-relaxed">
+          我是海南大学计算机科学与技术专业的学生，现居海口。
+          我构建软件、阅读论文、写技术文章来记录所学。
+        </p>
+        <p className="mt-4 text-text-secondary leading-relaxed">
+          我的兴趣涵盖从 C++ 底层系统编程到 TypeScript 和 Vue 现代 Web 开发。
+          我特别着迷于图算法、多智能体系统，以及理论计算机科学与实用软件工程的交叉领域。
+        </p>
+      </section>
+
+      {/* Education */}
+      <section className="mt-16">
+        <h2 className="text-lg font-semibold text-text-primary">教育</h2>
+        <div className="mt-4 space-y-4">
+          <div>
+            <h3 className="text-text-primary font-medium">海南大学</h3>
+            <p className="text-sm text-text-secondary">计算机科学与技术 本科，2025 &ndash; 2029</p>
+            <p className="mt-1 text-sm text-text-tertiary">海甸校区，海口</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Skills */}
+      <section className="mt-16">
+        <h2 className="text-lg font-semibold text-text-primary">技能</h2>
+        <div className="mt-4 grid gap-6 sm:grid-cols-2">
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary">编程语言</h3>
+            <p className="mt-1.5 text-sm text-text-tertiary">
+              C/C++、TypeScript、JavaScript、Python、HTML/CSS
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary">框架</h3>
+            <p className="mt-1.5 text-sm text-text-tertiary">
+              Vue 3、React、Next.js、Emscripten
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary">工具</h3>
+            <p className="mt-1.5 text-sm text-text-tertiary">
+              Git、Linux、VS Code、Obsidian、Supabase
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary">领域</h3>
+            <p className="mt-1.5 text-sm text-text-tertiary">
+              数据结构、图算法、WebAssembly、多智能体系统
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Interests */}
+      <section className="mt-16">
+        <h2 className="text-lg font-semibold text-text-primary">兴趣</h2>
+        <p className="mt-4 text-sm text-text-secondary leading-relaxed">
+          算法设计、系统编程、AI 智能体协作、开发者工具和技术写作。
+          计算机之外，我喜欢阅读和探索海口的美食。
+        </p>
+      </section>
+
+      {/* Contact */}
+      <section className="mt-16">
+        <h2 className="text-lg font-semibold text-text-primary">联系方式</h2>
+        <div className="mt-4 space-y-2 text-sm">
+          <p>
+            <span className="text-text-tertiary">GitHub：</span>
+            <a
+              href="https://github.com/wanghongyu666qiang"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text-secondary hover:text-text-primary transition-colors"
+            >
+              @wanghongyu666qiang
+            </a>
+          </p>
+          <p>
+            <span className="text-text-tertiary">邮箱：</span>
+            <span className="text-text-secondary">如需请联系</span>
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+}
