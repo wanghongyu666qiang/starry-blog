@@ -5,22 +5,33 @@ import { useEffect, useRef, useState } from "react";
 const SIZE = 40;
 const GAP = 24;
 
-const MENU_ITEMS = [
-  { href: "/admin/dashboard", label: "仪表盘" },
-  { href: "/admin/posts", label: "文章管理" },
-  { href: "/admin/projects", label: "项目管理" },
-  { href: "/admin/timeline", label: "时间线" },
-  { href: "/admin/settings", label: "设置" },
+type View = "menu" | "login" | "theme";
+
+const THEMES = [
+  { name: "浅色", bg: "#fafafa" },
+  { name: "暖黄", bg: "#fefce8" },
+  { name: "灰色", bg: "#f4f4f5" },
+  { name: "深色", bg: "#18181b" },
 ];
+
+function getSavedTheme(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("starry-theme");
+}
+
+function saveTheme(bg: string) {
+  localStorage.setItem("starry-theme", bg);
+  document.documentElement.style.setProperty("--theme-bg", bg);
+}
 
 export function AdminFab() {
   const [mounted, setMounted] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [view, setView] = useState<View>("menu");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [targetHref, setTargetHref] = useState("");
 
   const containerRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
@@ -31,27 +42,35 @@ export function AdminFab() {
   useEffect(() => {
     if (window.location.pathname.startsWith("/admin")) return;
     setPos({ x: window.innerWidth - SIZE - GAP, y: window.innerHeight - SIZE - GAP });
+
+    // 恢复保存的主题
+    const saved = getSavedTheme();
+    if (saved) document.documentElement.style.setProperty("--theme-bg", saved);
+
     setMounted(true);
   }, []);
 
-  // 点击外部关闭菜单（用容器 ref 包裹按钮+菜单）
+  // 外部点击关闭
   useEffect(() => {
     if (!menuOpen) return;
     const onMouseDown = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-        setTargetHref("");
-        setPassword("");
-        setError("");
+        closeMenu();
       }
     };
-    // 延迟绑定，避免打开菜单的同一事件触发关闭
     const timer = setTimeout(() => document.addEventListener("mousedown", onMouseDown), 0);
     return () => {
       clearTimeout(timer);
       document.removeEventListener("mousedown", onMouseDown);
     };
   }, [menuOpen]);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setView("menu");
+    setPassword("");
+    setError("");
+  };
 
   if (!mounted) return null;
 
@@ -78,12 +97,6 @@ export function AdminFab() {
     if (!moved.current) setMenuOpen((prev) => !prev);
   };
 
-  const handleMenuClick = (href: string) => {
-    setTargetHref(href);
-    setPassword("");
-    setError("");
-  };
-
   const login = async () => {
     if (!password) return;
     setLoading(true);
@@ -94,14 +107,14 @@ export function AdminFab() {
       body: JSON.stringify({ password }),
     });
     if (res.ok) {
-      window.location.href = targetHref || "/admin/dashboard";
+      window.location.href = "/admin/dashboard";
     } else {
       setError("密码错误");
       setLoading(false);
     }
   };
 
-  const menuAbove = pos.y > 220;
+  const menuAbove = pos.y > 280;
 
   return (
     <div ref={containerRef}>
@@ -114,8 +127,8 @@ export function AdminFab() {
         className="fixed z-[99] w-10 h-10 rounded-full bg-text-primary text-text-inverse shadow-lg
           flex items-center justify-center text-sm select-none touch-none
           hover:scale-110 active:scale-95 transition-transform cursor-grab active:cursor-grabbing"
-        aria-label="管理后台"
-        title="管理后台"
+        aria-label="设置"
+        title="设置"
       >
         ⚙
       </button>
@@ -123,25 +136,30 @@ export function AdminFab() {
       {menuOpen && (
         <div
           style={{ left: pos.x + SIZE / 2, top: menuAbove ? pos.y - 8 : pos.y + SIZE + 8 }}
-          className="fixed z-[100] -translate-x-1/2 w-44 bg-surface border border-border shadow-lg p-1"
+          className="fixed z-[100] -translate-x-1/2 w-40 bg-surface border border-border shadow-lg p-1"
         >
-          {!targetHref && (
+          {/* 主菜单 */}
+          {view === "menu" && (
             <div className="py-1">
-              {MENU_ITEMS.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => handleMenuClick(item.href)}
-                  className="block w-full text-left px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors"
-                >
-                  {item.label}
-                </button>
-              ))}
+              <button
+                onClick={() => setView("login")}
+                className="block w-full text-left px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors"
+              >
+                登录后台
+              </button>
+              <button
+                onClick={() => setView("theme")}
+                className="block w-full text-left px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors"
+              >
+                背景颜色
+              </button>
             </div>
           )}
 
-          {targetHref && (
+          {/* 登录 */}
+          {view === "login" && (
             <div className="p-2">
-              <div className="text-xs text-text-tertiary mb-2">登录以访问</div>
+              <div className="text-xs text-text-tertiary mb-2">管理员登录</div>
               <input
                 type="password"
                 value={password}
@@ -154,7 +172,7 @@ export function AdminFab() {
               {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
               <div className="mt-2 flex gap-2">
                 <button
-                  onClick={() => setTargetHref("")}
+                  onClick={() => setView("menu")}
                   className="flex-1 py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors"
                 >
                   返回
@@ -167,6 +185,34 @@ export function AdminFab() {
                   {loading ? "…" : "登录"}
                 </button>
               </div>
+            </div>
+          )}
+
+          {/* 背景颜色 */}
+          {view === "theme" && (
+            <div className="p-2">
+              <div className="text-xs text-text-tertiary mb-2">选择背景</div>
+              <div className="grid grid-cols-2 gap-1.5">
+                {THEMES.map((t) => (
+                  <button
+                    key={t.name}
+                    onClick={() => { saveTheme(t.bg); closeMenu(); }}
+                    className="flex items-center gap-1.5 px-2 py-1.5 text-xs text-text-secondary hover:bg-bg-alt transition-colors"
+                  >
+                    <span
+                      className="w-3.5 h-3.5 rounded-full border border-border shrink-0"
+                      style={{ background: t.bg }}
+                    />
+                    {t.name}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setView("menu")}
+                className="mt-2 w-full py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors"
+              >
+                返回
+              </button>
             </div>
           )}
         </div>

@@ -20,8 +20,12 @@
     "Courier New", monospace;
 }
 
+:root {
+  --theme-bg: var(--color-bg);
+}
+
 body {
-  background: var(--color-bg);
+  background: var(--theme-bg);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
