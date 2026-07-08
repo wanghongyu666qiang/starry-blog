@@ -5,23 +5,42 @@ import { useEffect, useRef, useState } from "react";
 const SIZE = 40;
 const GAP = 24;
 
+const MENU_ITEMS = [
+  { href: "/admin/dashboard", label: "仪表盘" },
+  { href: "/admin/posts", label: "文章管理" },
+  { href: "/admin/projects", label: "项目管理" },
+  { href: "/admin/timeline", label: "时间线" },
+  { href: "/admin/settings", label: "设置" },
+];
+
 export function AdminFab() {
   const [mounted, setMounted] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
-  const [showModal, setShowModal] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [targetHref, setTargetHref] = useState("");
 
   const dragging = useRef(false);
   const origin = useRef({ x: 0, y: 0 });
   const start = useRef({ x: 0, y: 0 });
   const moved = useRef(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.location.pathname.startsWith("/admin")) return;
     setPos({ x: window.innerWidth - SIZE - GAP, y: window.innerHeight - SIZE - GAP });
     setMounted(true);
+
+    // 点击外部关闭菜单
+    const onClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
   if (!mounted) return null;
@@ -46,7 +65,13 @@ export function AdminFab() {
 
   const onPointerUp = () => {
     dragging.current = false;
-    if (!moved.current) setShowModal(true);
+    if (!moved.current) setMenuOpen(!menuOpen);
+  };
+
+  const handleMenuClick = (href: string) => {
+    setTargetHref(href);
+    setPassword("");
+    setError("");
   };
 
   const login = async () => {
@@ -59,12 +84,15 @@ export function AdminFab() {
       body: JSON.stringify({ password }),
     });
     if (res.ok) {
-      window.location.href = "/admin/dashboard";
+      window.location.href = targetHref || "/admin/dashboard";
     } else {
       setError("密码错误");
       setLoading(false);
     }
   };
+
+  // 菜单定位：优先显示在按钮上方，空间不够时显示在下方
+  const menuAbove = pos.y > 220;
 
   return (
     <>
@@ -83,39 +111,60 @@ export function AdminFab() {
         ⚙
       </button>
 
-      {showModal && (
+      {menuOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 p-6"
-          onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false); }}
+          ref={menuRef}
+          style={{ left: pos.x + SIZE / 2, top: menuAbove ? pos.y - 8 : pos.y + SIZE + 8 }}
+          className="fixed z-[100] -translate-x-1/2 w-44 bg-surface border border-border shadow-lg p-1"
         >
-          <div className="w-full max-w-xs bg-surface border border-border p-6" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-sm font-medium text-text-primary mb-4">管理后台</h2>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => { setPassword(e.target.value); setError(""); }}
-              onKeyDown={(e) => { if (e.key === "Enter") login(); }}
-              placeholder="请输入密码"
-              autoFocus
-              className="w-full px-3 py-2 border border-border bg-bg text-text-primary placeholder:text-text-tertiary text-sm focus:outline-none focus:border-text-primary transition-colors"
-            />
-            {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
-            <div className="mt-4 flex gap-2">
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 py-2 text-sm text-text-tertiary hover:text-text-primary transition-colors"
-              >
-                取消
-              </button>
-              <button
-                onClick={login}
-                disabled={loading || !password}
-                className="flex-1 py-2 text-sm font-medium bg-text-primary text-text-inverse hover:bg-text-secondary transition-colors disabled:opacity-50"
-              >
-                {loading ? "…" : "登录"}
-              </button>
+          {/* 未选目标：显示菜单项 */}
+          {!targetHref && (
+            <div className="py-1">
+              {MENU_ITEMS.map((item) => (
+                <button
+                  key={item.href}
+                  onClick={() => handleMenuClick(item.href)}
+                  className="block w-full text-left px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors"
+                >
+                  {item.label}
+                </button>
+              ))}
             </div>
-          </div>
+          )}
+
+          {/* 选了目标：显示登录表单 */}
+          {targetHref && (
+            <div className="p-2">
+              <div className="text-xs text-text-tertiary mb-2">
+                登录以访问
+              </div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setError(""); }}
+                onKeyDown={(e) => { if (e.key === "Enter") login(); }}
+                placeholder="密码"
+                autoFocus
+                className="w-full px-2 py-1.5 border border-border bg-bg text-text-primary placeholder:text-text-tertiary text-sm focus:outline-none focus:border-text-primary"
+              />
+              {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
+              <div className="mt-2 flex gap-2">
+                <button
+                  onClick={() => setTargetHref("")}
+                  className="flex-1 py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors"
+                >
+                  返回
+                </button>
+                <button
+                  onClick={login}
+                  disabled={loading || !password}
+                  className="flex-1 py-1 text-xs font-medium bg-text-primary text-text-inverse hover:bg-text-secondary transition-colors disabled:opacity-50"
+                >
+                  {loading ? "…" : "登录"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>
