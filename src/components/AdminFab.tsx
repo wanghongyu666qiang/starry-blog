@@ -22,26 +22,36 @@ export function AdminFab() {
   const [loading, setLoading] = useState(false);
   const [targetHref, setTargetHref] = useState("");
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const origin = useRef({ x: 0, y: 0 });
   const start = useRef({ x: 0, y: 0 });
   const moved = useRef(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.location.pathname.startsWith("/admin")) return;
     setPos({ x: window.innerWidth - SIZE - GAP, y: window.innerHeight - SIZE - GAP });
     setMounted(true);
+  }, []);
 
-    // 点击外部关闭菜单
-    const onClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+  // 点击外部关闭菜单（用容器 ref 包裹按钮+菜单）
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onMouseDown = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
+        setTargetHref("");
+        setPassword("");
+        setError("");
       }
     };
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, []);
+    // 延迟绑定，避免打开菜单的同一事件触发关闭
+    const timer = setTimeout(() => document.addEventListener("mousedown", onMouseDown), 0);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mousedown", onMouseDown);
+    };
+  }, [menuOpen]);
 
   if (!mounted) return null;
 
@@ -65,7 +75,7 @@ export function AdminFab() {
 
   const onPointerUp = () => {
     dragging.current = false;
-    if (!moved.current) setMenuOpen(!menuOpen);
+    if (!moved.current) setMenuOpen((prev) => !prev);
   };
 
   const handleMenuClick = (href: string) => {
@@ -91,11 +101,10 @@ export function AdminFab() {
     }
   };
 
-  // 菜单定位：优先显示在按钮上方，空间不够时显示在下方
   const menuAbove = pos.y > 220;
 
   return (
-    <>
+    <div ref={containerRef}>
       <button
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -113,11 +122,9 @@ export function AdminFab() {
 
       {menuOpen && (
         <div
-          ref={menuRef}
           style={{ left: pos.x + SIZE / 2, top: menuAbove ? pos.y - 8 : pos.y + SIZE + 8 }}
           className="fixed z-[100] -translate-x-1/2 w-44 bg-surface border border-border shadow-lg p-1"
         >
-          {/* 未选目标：显示菜单项 */}
           {!targetHref && (
             <div className="py-1">
               {MENU_ITEMS.map((item) => (
@@ -132,12 +139,9 @@ export function AdminFab() {
             </div>
           )}
 
-          {/* 选了目标：显示登录表单 */}
           {targetHref && (
             <div className="p-2">
-              <div className="text-xs text-text-tertiary mb-2">
-                登录以访问
-              </div>
+              <div className="text-xs text-text-tertiary mb-2">登录以访问</div>
               <input
                 type="password"
                 value={password}
@@ -167,6 +171,6 @@ export function AdminFab() {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 }
