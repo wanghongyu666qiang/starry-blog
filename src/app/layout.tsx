@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: "%s — Starry",
   },
   description: "海南大学软件工程专业在读。技术文章、项目展示、学习记录。",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://starry.os.kg"),
   openGraph: {
     title: "Starry — 个人网站",
     description: "海南大学软件工程专业在读。技术文章、项目展示、学习记录。",
