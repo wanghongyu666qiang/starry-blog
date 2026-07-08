@@ -1,17 +1,12 @@
 import { cookies } from "next/headers";
-import crypto from "crypto";
 
 const COOKIE_NAME = "admin_token";
-
-function hashPassword(password: string): string {
-  return crypto.createHash("sha256").update(password).digest("hex");
-}
 
 export async function login(password: string): Promise<boolean> {
   const correctPassword = process.env.ADMIN_PASSWORD;
   if (!correctPassword || password !== correctPassword) return false;
 
-  const token = hashPassword(password + process.env.ADMIN_PASSWORD);
+  const token = "starry_" + btoa(password);
   const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
@@ -34,6 +29,6 @@ export async function isAuthenticated(): Promise<boolean> {
 
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
-  const expected = hashPassword(correctPassword + correctPassword);
+  const expected = "starry_" + btoa(correctPassword);
   return token === expected;
 }

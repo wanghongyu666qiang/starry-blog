@@ -1,12 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import crypto from "crypto";
 
 const COOKIE_NAME = "admin_token";
-
-function hashPassword(password: string): string {
-  return crypto.createHash("sha256").update(password).digest("hex");
-}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -20,7 +15,8 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
 
-    const expected = hashPassword(password + password);
+    // Simple comparison (Edge Runtime compatible — no crypto)
+    const expected = "starry_" + btoa(password);
     if (token !== expected) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
