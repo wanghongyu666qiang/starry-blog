@@ -42,6 +42,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {project.description}
         </p>
 
+        {/* Role */}
+        {project.role && (
+          <div className="mt-6 p-4 border border-border bg-bg-alt">
+            <p className="text-sm text-text-secondary">
+              <span className="font-medium text-text-primary">Role: </span>
+              {project.role}
+            </p>
+          </div>
+        )}
+
         {/* Tech Stack */}
         <div className="mt-4 flex flex-wrap gap-1.5">
           {project.tech_stack.map((tech) => (

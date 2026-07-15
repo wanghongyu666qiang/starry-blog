@@ -19,6 +19,7 @@ export interface Project {
   description: string;
   cover: string | null;
   content: string;
+  role: string | null;
   tech_stack: string[];
   github_url: string | null;
   demo_url: string | null;

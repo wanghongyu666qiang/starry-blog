@@ -25,6 +25,7 @@ export default async function ProjectsPage() {
             description={project.description}
             techStack={project.tech_stack}
             slug={project.slug}
+            role={project.role}
           />
         ))}
       </div>

@@ -2,6 +2,7 @@
 title: "海南大学导航系统"
 description: "覆盖三个校区的校园导航系统，基于稀疏图的双图架构，C++ 实现并通过 WebAssembly 部署至浏览器。"
 date: "2026-06-17"
+role: "Full-stack Developer — 负责图模型设计、最短路径算法实现、WebAssembly 编译链路搭建、前端交互开发"
 tech_stack: ["C++", "WebAssembly", "图算法", "HTML/CSS", "Emscripten"]
 github_url: "https://github.com/wanghongyu666qiang/The_navigation_of_hainanu_web"
 demo_url: "https://wanghongyu666qiang.github.io/The_navigation_of_hainanu_web/"

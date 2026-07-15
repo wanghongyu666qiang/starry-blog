@@ -5,9 +5,10 @@ interface ProjectCardProps {
   description: string;
   techStack: string[];
   slug: string;
+  role?: string | null;
 }
 
-export function ProjectCard({ title, description, techStack, slug }: ProjectCardProps) {
+export function ProjectCard({ title, description, techStack, slug, role }: ProjectCardProps) {
   return (
     <Link href={`/projects/${slug}`} className="group block">
       <article className="p-6 border border-border hover:border-border-hover transition-colors">
@@ -17,7 +18,12 @@ export function ProjectCard({ title, description, techStack, slug }: ProjectCard
         <p className="mt-2 text-sm text-text-secondary leading-relaxed line-clamp-2">
           {description}
         </p>
-        <div className="mt-4 flex flex-wrap gap-1.5">
+        {role && (
+          <p className="mt-2 text-xs text-text-tertiary">
+            {role}
+          </p>
+        )}
+        <div className="mt-3 flex flex-wrap gap-1.5">
           {techStack.map((tech) => (
             <span
               key={tech}

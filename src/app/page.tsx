@@ -6,7 +6,7 @@ import { PostCard } from "@/components/PostCard";
 import { ProjectCard } from "@/components/ProjectCard";
 
 export const metadata: Metadata = {
-  description: "海南大学软件工程专业在读。构建软件、撰写技术文章、记录学习历程。",
+  description: "海南大学软件工程专业在读。构建智能工具与有意义的软件。",
 };
 
 export default async function Home() {
@@ -14,9 +14,12 @@ export default async function Home() {
   const posts = await getPosts();
   const timeline = await getTimeline();
 
-  const featuredProjects = projects.slice(0, 2);
+  const featuredProjects = projects.slice(0, 3);
   const latestArticles = posts.slice(0, 3);
   const timelinePreview = timeline.slice(0, 3);
+
+  // Find zhi-xue project for "Currently building"
+  const zhiXue = projects.find((p) => p.slug === "zhi-xue");
 
   return (
     <>
@@ -42,11 +45,60 @@ export default async function Home() {
             <h1 className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
               你好，我是 Starry。
             </h1>
-            <p className="mt-6 text-lg text-text-secondary leading-relaxed max-w-xl">
-              海南大学软件工程专业在读。我喜欢构建软件，写技术文章，
-              相信好的软件始于清晰的思考。
+            <p className="mt-4 text-lg text-text-secondary leading-relaxed max-w-xl">
+              Software Engineering Student
             </p>
-            <div className="mt-8 flex items-center gap-4">
+            <p className="mt-1 text-base text-text-secondary leading-relaxed max-w-xl">
+              Building intelligent tools and meaningful software.
+            </p>
+
+            {/* Focus tags */}
+            <div className="mt-5 flex flex-wrap gap-1.5">
+              {["AI Agent", "RAG", "WebAssembly", "Developer Tools"].map(
+                (tag) => (
+                  <span
+                    key={tag}
+                    className="inline-block px-2.5 py-1 text-xs text-text-secondary bg-bg-alt border border-border"
+                  >
+                    {tag}
+                  </span>
+                )
+              )}
+            </div>
+
+            {/* Currently building */}
+            {zhiXue && (
+              <div className="mt-6 p-4 border border-border bg-bg-alt max-w-lg">
+                <p className="text-xs text-text-tertiary uppercase tracking-wider">
+                  Currently Building
+                </p>
+                <p className="mt-1 text-sm font-medium text-text-primary">
+                  {zhiXue.title}
+                </p>
+                <p className="mt-0.5 text-sm text-text-secondary">
+                  {zhiXue.description}
+                </p>
+                <Link
+                  href={`/projects/${zhiXue.slug}`}
+                  className="inline-block mt-2 text-xs text-text-secondary hover:text-text-primary transition-colors"
+                >
+                  查看项目 &rarr;
+                </Link>
+              </div>
+            )}
+
+            {/* Currently learning */}
+            <div className="mt-4">
+              <p className="text-xs text-text-tertiary uppercase tracking-wider">
+                Currently Learning
+              </p>
+              <p className="text-sm text-text-secondary">
+                LLM Agent Architecture
+              </p>
+            </div>
+
+            {/* CTA */}
+            <div className="mt-6 flex items-center gap-4">
               <Link
                 href="/articles"
                 className="inline-flex items-center px-5 py-2.5 text-sm font-medium bg-text-primary text-text-inverse hover:bg-text-secondary transition-colors"
@@ -75,7 +127,7 @@ export default async function Home() {
             全部项目 &rarr;
           </Link>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {featuredProjects.map((project) => (
             <ProjectCard
               key={project.slug}
@@ -83,6 +135,7 @@ export default async function Home() {
               description={project.description}
               techStack={project.tech_stack}
               slug={project.slug}
+              role={project.role}
             />
           ))}
         </div>

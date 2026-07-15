@@ -12,6 +12,7 @@ export default function AdminProjectEditPage() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [role, setRole] = useState("");
   const [content, setContent] = useState("");
   const [techStack, setTechStack] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
@@ -30,6 +31,7 @@ export default function AdminProjectEditPage() {
           const data = await res.json();
           setTitle(data.title || "");
           setDescription(data.description || "");
+          setRole(data.role || "");
           setContent(data.content || "");
           setTechStack((data.tech_stack || []).join(", "));
           setGithubUrl(data.github_url || "");
@@ -63,6 +65,7 @@ export default function AdminProjectEditPage() {
         slug: newSlug,
         title,
         description,
+        role,
         content,
         tech_stack: techStack.split(",").map((t) => t.trim()).filter(Boolean),
         github_url: githubUrl || null,
@@ -149,6 +152,16 @@ export default function AdminProjectEditPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full px-3 py-2 border border-border bg-surface text-text-primary text-sm focus:outline-none focus:border-text-primary"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-text-secondary mb-1">Role / 负责内容</label>
+            <input
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-3 py-2 border border-border bg-surface text-text-primary text-sm focus:outline-none focus:border-text-primary"
+              placeholder="如：Full-stack Developer — 负责..."
             />
           </div>
 
