@@ -1,11 +1,20 @@
 [
   {
+    "id": "10",
+    "date": "2026-07-01",
+    "title": "完成智学 (ZhiXue) Obsidian AI 插件",
+    "description": "完成个人知识库 RAG 助手开发，实现本地 Ollama + 云端 SiliconFlow 双模型支持。",
+    "type": "project",
+    "link": "/projects/zhi-xue",
+    "created_at": "2026-07-01"
+  },
+  {
     "id": "1",
     "date": "2026-06-17",
     "title": "导航系统部署上线",
     "description": "将海南大学导航系统以 WebAssembly 形式部署至 GitHub Pages，完成数据结构课程设计项目。",
     "type": "project",
-    "link": null,
+    "link": "/projects/hainanu-navigation",
     "created_at": "2026-06-17"
   },
   {
@@ -14,7 +23,7 @@
     "title": "启动 MAS 综述研究",
     "description": "开始系统梳理多智能体系统聚合机制文献，研读 Free-MAD、DeLLMphi、LLMASC 等相关协调模式论文。",
     "type": "milestone",
-    "link": null,
+    "link": "/articles/mas-aggregation-survey",
     "created_at": "2026-05-10"
   },
   {
@@ -23,17 +32,35 @@
     "title": "完成智能开支追踪器",
     "description": "完成 Vue 3 开支追踪应用，实现 8 项核心功能，包括分类管理、预算提醒与数据可视化。",
     "type": "project",
-    "link": null,
+    "link": "/projects/smart-expense-tracker",
     "created_at": "2026-03-15"
+  },
+  {
+    "id": "6",
+    "date": "2026-02-15",
+    "title": "开始探索 RAG 系统设计",
+    "description": "系统学习检索增强生成技术原理，开始规划基于个人知识库的 Obsidian AI 插件。",
+    "type": "milestone",
+    "link": null,
+    "created_at": "2026-02-15"
   },
   {
     "id": "4",
     "date": "2025-12-30",
     "title": "完成第一学期课程",
-    "description": "以优异成绩完成程序设计、数据结构、高等数学等基础课程。",
+    "description": "以优异成绩完成程序设计、高等数学等基础课程，确立软件工程专业方向。",
     "type": "milestone",
     "link": null,
     "created_at": "2025-12-30"
+  },
+  {
+    "id": "7",
+    "date": "2025-10-20",
+    "title": "第一次接触 LLM 应用开发",
+    "description": "开始学习大语言模型 API 调用、Prompt Engineering 基础，尝试构建第一个 AI 对话应用。",
+    "type": "milestone",
+    "link": null,
+    "created_at": "2025-10-20"
   },
   {
     "id": "5",
@@ -43,5 +70,14 @@
     "type": "milestone",
     "link": null,
     "created_at": "2025-09-01"
+  },
+  {
+    "id": "8",
+    "date": "2025-06-10",
+    "title": "开始系统学习数据结构",
+    "description": "从数组、链表到图论，为后续算法学习奠定基础。",
+    "type": "learning",
+    "link": null,
+    "created_at": "2025-06-10"
   }
 ]

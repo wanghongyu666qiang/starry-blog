@@ -6,9 +6,10 @@ interface PostCardProps {
   date: string;
   category?: string;
   slug: string;
+  tags?: string[];
 }
 
-export function PostCard({ title, description, date, category, slug }: PostCardProps) {
+export function PostCard({ title, description, date, category, slug, tags }: PostCardProps) {
   return (
     <Link href={`/articles/${slug}`} className="group block">
       <article className="py-4 border-b border-border hover:border-border-hover transition-colors">
@@ -27,6 +28,18 @@ export function PostCard({ title, description, date, category, slug }: PostCardP
         <p className="mt-1 text-sm text-text-secondary leading-relaxed line-clamp-2">
           {description}
         </p>
+        {tags && tags.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {tags.slice(0, 4).map((tag) => (
+              <span
+                key={tag}
+                className="inline-block px-1.5 py-0.5 text-xs text-text-tertiary bg-bg-alt border border-border"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </article>
     </Link>
   );

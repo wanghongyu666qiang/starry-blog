@@ -22,6 +22,30 @@ export default function AboutPage() {
         </p>
       </section>
 
+      {/* Development Philosophy */}
+      <section className="mt-16">
+        <h2 className="text-lg font-semibold text-text-primary">我的开发理念</h2>
+        <div className="mt-4 space-y-3">
+          <p className="text-text-secondary leading-relaxed">
+            我喜欢构建能够真正解决问题的软件，而不是堆叠技术。
+          </p>
+          <div className="space-y-2 text-sm text-text-secondary">
+            <div className="flex items-start gap-3">
+              <span className="text-text-tertiary shrink-0 mt-0.5">01</span>
+              <p><span className="font-medium text-text-primary">为什么需要它？</span> — 从真实痛点出发，而非为了用某个技术而创造需求。</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-text-tertiary shrink-0 mt-0.5">02</span>
+              <p><span className="font-medium text-text-primary">用户为什么使用它？</span> — 关注体验，让工具真正融入工作流，而非增加负担。</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <span className="text-text-tertiary shrink-0 mt-0.5">03</span>
+              <p><span className="font-medium text-text-primary">系统如何长期维护？</span> — 写清晰的代码、做好文档，对未来的自己和其他开发者友好。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Education */}
       <section className="mt-16">
         <h2 className="text-lg font-semibold text-text-primary">教育</h2>

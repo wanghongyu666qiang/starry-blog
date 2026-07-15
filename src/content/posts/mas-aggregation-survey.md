@@ -2,8 +2,8 @@
 title: "多智能体系统聚合机制综述"
 description: "梳理 MAS 中的协调模式：从 Free-MAD 到 LLMASC，探索智能体如何讨论、投票与达成共识。"
 date: "2026-06-25"
-category: "研究"
-tags: ["MAS", "LLM", "综述"]
+category: "Research"
+tags: ["MAS", "LLM", "综述", "论文阅读", "AI研究"]
 published: true
 ---
 
