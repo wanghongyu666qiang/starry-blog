@@ -31,6 +31,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" className="h-full">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('starry-theme');if(t)document.documentElement.setAttribute('data-theme',t)})()`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <a
           href="#main-content"

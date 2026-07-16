@@ -21,37 +21,28 @@ const STORAGE_POS = "starry-fab-pos";
 
 // ── helpers ──
 
-function getStored(key: string): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem(key);
-}
-
-function setStored(key: string, val: string) {
-  localStorage.setItem(key, val);
-}
-
 function applyTheme(key: string) {
   document.documentElement.setAttribute("data-theme", key);
-  setStored(STORAGE_THEME, key);
-}
-
-function getSavedTheme(): string {
-  return getStored(STORAGE_THEME) || "light";
-}
-
-function getSavedPos(size: number): { x: number; y: number } {
-  const raw = getStored(STORAGE_POS);
-  if (raw) {
-    try {
-      const p = JSON.parse(raw);
-      if (typeof p.x === "number" && typeof p.y === "number") return p;
-    } catch {}
-  }
-  return { x: window.innerWidth - size - GAP, y: window.innerHeight - size - GAP };
+  localStorage.setItem(STORAGE_THEME, key);
 }
 
 function getSize(): number {
   return window.innerWidth < 640 ? SIZE_MOBILE : SIZE_DESKTOP;
+}
+
+function defaultPos(size: number) {
+  return { x: window.innerWidth - size - GAP, y: window.innerHeight - size - GAP };
+}
+
+function loadPos(size: number): { x: number; y: number } {
+  try {
+    const raw = localStorage.getItem(STORAGE_POS);
+    if (raw) {
+      const p = JSON.parse(raw);
+      if (typeof p.x === "number" && typeof p.y === "number") return p;
+    }
+  } catch {}
+  return defaultPos(size);
 }
 
 // ── component ──
@@ -65,40 +56,49 @@ export function AdminFab() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentTheme, setCurrentTheme] = useState("light");
-  const [size, setSizeState] = useState(SIZE_DESKTOP);
+  const [size, setSize] = useState(SIZE_DESKTOP);
 
+  const btnRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
-  const origin = useRef({ x: 0, y: 0 });
-  const start = useRef({ x: 0, y: 0 });
   const moved = useRef(false);
+  const dragOrigin = useRef({ x: 0, y: 0 });
+  const dragStart = useRef({ x: 0, y: 0 });
 
   // ── init ──
   useEffect(() => {
     if (window.location.pathname.startsWith("/admin")) return;
 
     const s = getSize();
-    setSizeState(s);
-    setPos(getSavedPos(s));
+    setSize(s);
+    const p = loadPos(s);
+    setPos(p);
 
-    const theme = getSavedTheme();
-    applyTheme(theme);
+    const theme = localStorage.getItem(STORAGE_THEME) || "light";
     setCurrentTheme(theme);
 
     const onResize = () => {
       const ns = getSize();
-      setSizeState(ns);
-      // keep within bounds
+      setSize(ns);
       setPos((prev) => ({
         x: Math.min(prev.x, window.innerWidth - ns),
         y: Math.min(prev.y, window.innerHeight - ns),
       }));
     };
     window.addEventListener("resize", onResize);
-
     setMounted(true);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  // ── ESC to close ──
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMenu();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   // ── external click to close ──
   useEffect(() => {
@@ -122,35 +122,76 @@ export function AdminFab() {
     setError("");
   }, []);
 
-  // ── drag & click ──
+  // ── drag & click (ref-based for zero-lag) ──
   const onPointerDown = (e: React.PointerEvent) => {
     dragging.current = true;
     moved.current = false;
-    origin.current = { x: pos.x, y: pos.y };
-    start.current = { x: e.clientX, y: e.clientY };
+
+    // read current DOM position (may differ from pos state during render)
+    const el = btnRef.current;
+    if (el) {
+      dragOrigin.current = {
+        x: parseFloat(el.style.left) || pos.x,
+        y: parseFloat(el.style.top) || pos.y,
+      };
+    } else {
+      dragOrigin.current = { x: pos.x, y: pos.y };
+    }
+    dragStart.current = { x: e.clientX, y: e.clientY };
+
+    // capture pointer so we get events even outside the button
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
     if (!dragging.current) return;
-    const dx = e.clientX - start.current.x;
-    const dy = e.clientY - start.current.y;
+    const dx = e.clientX - dragStart.current.x;
+    const dy = e.clientY - dragStart.current.y;
     if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
       moved.current = true;
     }
-    setPos({
-      x: Math.max(0, Math.min(window.innerWidth - size, origin.current.x + dx)),
-      y: Math.max(0, Math.min(window.innerHeight - size, origin.current.y + dy)),
-    });
+    const x = Math.max(0, Math.min(window.innerWidth - size, dragOrigin.current.x + dx));
+    const y = Math.max(0, Math.min(window.innerHeight - size, dragOrigin.current.y + dy));
+    // direct DOM for zero lag
+    if (btnRef.current) {
+      btnRef.current.style.left = x + "px";
+      btnRef.current.style.top = y + "px";
+    }
   };
 
-  const onPointerUp = () => {
+  const onPointerUp = (e: React.PointerEvent) => {
     dragging.current = false;
+    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+
     if (!moved.current) {
       setMenuOpen((prev) => !prev);
     } else {
-      // persist position
-      setStored(STORAGE_POS, JSON.stringify(pos));
+      // compute final position from refs (never stale)
+      const x = Math.max(
+        0,
+        Math.min(
+          window.innerWidth - size,
+          dragOrigin.current.x + (e.clientX - dragStart.current.x)
+        )
+      );
+      const y = Math.max(
+        0,
+        Math.min(
+          window.innerHeight - size,
+          dragOrigin.current.y + (e.clientY - dragStart.current.y)
+        )
+      );
+      setPos({ x, y });
+      localStorage.setItem(STORAGE_POS, JSON.stringify({ x, y }));
     }
+  };
+
+  const onPointerLeave = () => {
+    // only clean up drag state — do NOT toggle menu
+    if (dragging.current) {
+      // keep dragging = true to allow re-entry (pointercapture handles it)
+    }
+    // no-op for click case: pointerLeave should not affect menu
   };
 
   // ── login ──
@@ -178,13 +219,11 @@ export function AdminFab() {
     closeMenu();
   };
 
+  if (!mounted) return null;
+
   // ── menu positioning ──
   const menuWidth = 160;
   const menuAbove = pos.y > 240;
-
-  if (!mounted) return null;
-
-  // clamp center so the 160px-wide menu stays inside viewport
   const menuCenter = Math.max(
     menuWidth / 2 + 8,
     Math.min(window.innerWidth - menuWidth / 2 - 8, pos.x + size / 2)
@@ -192,12 +231,12 @@ export function AdminFab() {
 
   return (
     <div ref={containerRef}>
-      {/* FAB button */}
       <button
+        ref={btnRef}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        onPointerLeave={onPointerUp}
+        onPointerLeave={onPointerLeave}
         style={{ left: pos.x, top: pos.y, width: size, height: size }}
         className="fixed z-[99] rounded-full bg-text-primary text-text-inverse shadow-lg
           flex items-center justify-center text-sm select-none touch-none
@@ -221,25 +260,17 @@ export function AdminFab() {
           }}
           className="fixed z-[100] w-40 bg-surface border border-border shadow-lg p-1"
         >
-          {/* 主菜单 */}
           {view === "menu" && (
             <div className="py-1">
-              <button
-                onClick={() => setView("login")}
-                className="block w-full text-left px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors"
-              >
+              <button onClick={() => setView("login")} className="block w-full text-left px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors">
                 登录后台
               </button>
-              <button
-                onClick={() => setView("theme")}
-                className="block w-full text-left px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors"
-              >
+              <button onClick={() => setView("theme")} className="block w-full text-left px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-bg-alt transition-colors">
                 背景颜色
               </button>
             </div>
           )}
 
-          {/* 登录 */}
           {view === "login" && (
             <div className="p-2">
               <div className="text-xs text-text-tertiary mb-2">管理员登录</div>
@@ -254,65 +285,39 @@ export function AdminFab() {
               />
               {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
               <div className="mt-2 flex gap-2">
-                <button
-                  onClick={() => setView("menu")}
-                  className="flex-1 py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors"
-                >
+                <button onClick={() => setView("menu")} className="flex-1 py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors">
                   返回
                 </button>
-                <button
-                  onClick={login}
-                  disabled={loading || !password}
-                  className="flex-1 py-1 text-xs font-medium bg-text-primary text-text-inverse hover:bg-text-secondary transition-colors disabled:opacity-50"
-                >
+                <button onClick={login} disabled={loading || !password} className="flex-1 py-1 text-xs font-medium bg-text-primary text-text-inverse hover:bg-text-secondary transition-colors disabled:opacity-50">
                   {loading ? "…" : "登录"}
                 </button>
               </div>
             </div>
           )}
 
-          {/* 背景颜色 */}
           {view === "theme" && (
             <div className="p-2">
               <div className="text-xs text-text-tertiary mb-2">选择背景</div>
               <div className="grid grid-cols-1 gap-0.5">
                 {THEMES.map((t) => (
-                  <button
-                    key={t.key}
-                    onClick={() => onThemeChange(t.key)}
-                    className="flex items-center gap-2 px-2 py-1.5 text-xs text-text-secondary hover:bg-bg-alt transition-colors rounded"
-                  >
+                  <button key={t.key} onClick={() => onThemeChange(t.key)} className="flex items-center gap-2 px-2 py-1.5 text-xs text-text-secondary hover:bg-bg-alt transition-colors rounded">
                     <span
                       className="w-4 h-4 rounded-full border-2 shrink-0 transition-colors"
                       style={{
                         background: t.bg,
-                        borderColor:
-                          currentTheme === t.key ? "var(--color-text-primary)" : "var(--color-border)",
+                        borderColor: currentTheme === t.key ? "var(--color-text-primary)" : "var(--color-border)",
                       }}
                     />
                     <span className="flex-1 text-left">{t.name}</span>
                     {currentTheme === t.key && (
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="text-text-primary shrink-0"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
+                      <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor" className="text-text-primary shrink-0">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     )}
                   </button>
                 ))}
               </div>
-              <button
-                onClick={() => setView("menu")}
-                className="mt-2 w-full py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors"
-              >
+              <button onClick={() => setView("menu")} className="mt-2 w-full py-1 text-xs text-text-tertiary hover:text-text-primary transition-colors">
                 返回
               </button>
             </div>
