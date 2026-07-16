@@ -14,7 +14,7 @@ export function ProjectCard({ title, description, techStack, slug, role }: Proje
   return (
     <Link href={`/projects/${slug}`} className="group block">
       <article
-        className="relative p-6 border border-border bg-surface
+        className="relative p-5 sm:p-6 border border-border bg-surface
           transition-all duration-300 ease-out
           hover:scale-[1.01] hover:border-text-primary/30 hover:shadow-lg hover:shadow-neutral-900/5"
       >

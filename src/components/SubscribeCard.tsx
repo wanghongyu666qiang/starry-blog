@@ -28,7 +28,7 @@ export function SubscribeCard() {
 
   return (
     <section className="mx-auto max-w-5xl px-6 pb-24">
-      <div className="border border-border p-8 sm:p-10 text-center">
+      <div className="border border-border p-6 sm:p-10 text-center">
         <h2 className="text-lg font-semibold text-text-primary">
           保持联系
         </h2>
@@ -36,7 +36,7 @@ export function SubscribeCard() {
           订阅我的 Newsletter，获取最新文章和项目动态。不打扰，每月最多一封。
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-6 flex gap-2 max-w-sm mx-auto">
+        <form onSubmit={handleSubmit} className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-2 max-w-sm mx-auto">
           <input
             type="email"
             value={email}

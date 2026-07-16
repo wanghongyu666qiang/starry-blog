@@ -50,7 +50,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     .slice(0, 2);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 pt-24 pb-24">
+    <div className="mx-auto max-w-5xl px-5 sm:px-6 pt-20 sm:pt-24 pb-16 sm:pb-24">
       {/* Article Header */}
       <header className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 text-sm text-text-tertiary">

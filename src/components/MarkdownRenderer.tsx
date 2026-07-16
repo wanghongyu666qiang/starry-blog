@@ -38,7 +38,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
         rehypePlugins={[rehypeKatex, rehypeHighlight]}
         components={{
           pre: ({ children, ...props }) => (
-            <pre className="overflow-x-auto border border-border bg-bg-alt p-4 text-sm my-6" {...props}>
+            <pre className="overflow-x-auto border border-border bg-bg-alt p-3 sm:p-4 text-xs sm:text-sm my-6" {...props}>
               {children}
             </pre>
           ),
@@ -46,7 +46,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             const isInline = !className;
             if (isInline) {
               return (
-                <code className="px-1.5 py-0.5 text-sm bg-bg-alt border border-border" {...props}>
+                <code className="px-1.5 py-0.5 text-xs sm:text-sm bg-bg-alt border border-border break-all" {...props}>
                   {children}
                 </code>
               );
@@ -58,44 +58,44 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             );
           },
           h1: ({ children, ...props }) => (
-            <h1 className="text-3xl font-semibold text-text-primary mt-16 mb-6" {...props}>{children}</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-text-primary mt-12 sm:mt-16 mb-4 sm:mb-6" {...props}>{children}</h1>
           ),
           h2: ({ children, ...props }) => (
-            <h2 className="text-xl font-semibold text-text-primary mt-12 mb-4" {...props}>{children}</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-text-primary mt-8 sm:mt-12 mb-3 sm:mb-4" {...props}>{children}</h2>
           ),
           h3: ({ children, ...props }) => (
-            <h3 className="text-lg font-medium text-text-primary mt-8 mb-3" {...props}>{children}</h3>
+            <h3 className="text-base sm:text-lg font-medium text-text-primary mt-6 sm:mt-8 mb-2 sm:mb-3" {...props}>{children}</h3>
           ),
           p: ({ children, ...props }) => (
-            <p className="text-text-secondary leading-relaxed my-4" {...props}>{children}</p>
+            <p className="text-sm sm:text-base text-text-secondary leading-relaxed my-4" {...props}>{children}</p>
           ),
           a: ({ children, href, ...props }) => (
-            <a href={href} className="text-text-primary underline underline-offset-2 decoration-border hover:decoration-text-primary transition-colors" {...props}>
+            <a href={href} className="text-text-primary underline underline-offset-2 decoration-border hover:decoration-text-primary transition-colors break-all" {...props}>
               {children}
             </a>
           ),
           ul: ({ children, ...props }) => (
-            <ul className="list-disc pl-6 my-4 space-y-1 text-text-secondary" {...props}>{children}</ul>
+            <ul className="list-disc pl-5 sm:pl-6 my-4 space-y-1.5 text-sm sm:text-base text-text-secondary" {...props}>{children}</ul>
           ),
           ol: ({ children, ...props }) => (
-            <ol className="list-decimal pl-6 my-4 space-y-1 text-text-secondary" {...props}>{children}</ol>
+            <ol className="list-decimal pl-5 sm:pl-6 my-4 space-y-1.5 text-sm sm:text-base text-text-secondary" {...props}>{children}</ol>
           ),
           li: ({ children, ...props }) => (
             <li className="leading-relaxed" {...props}>{children}</li>
           ),
           blockquote: ({ children, ...props }) => (
-            <blockquote className="border-l-2 border-border pl-4 my-4 text-text-tertiary italic" {...props}>{children}</blockquote>
+            <blockquote className="border-l-2 border-border pl-3 sm:pl-4 my-4 text-sm sm:text-base text-text-tertiary italic" {...props}>{children}</blockquote>
           ),
           table: ({ children, ...props }) => (
-            <div className="overflow-x-auto my-6">
-              <table className="w-full text-sm border-collapse" {...props}>{children}</table>
+            <div className="overflow-x-auto my-6 -mx-5 sm:mx-0">
+              <table className="w-full text-xs sm:text-sm border-collapse" {...props}>{children}</table>
             </div>
           ),
           th: ({ children, ...props }) => (
-            <th className="border border-border px-3 py-2 text-left font-medium text-text-primary bg-bg-alt" {...props}>{children}</th>
+            <th className="border border-border px-2 sm:px-3 py-2 text-left font-medium text-text-primary bg-bg-alt" {...props}>{children}</th>
           ),
           td: ({ children, ...props }) => (
-            <td className="border border-border px-3 py-2 text-text-secondary" {...props}>{children}</td>
+            <td className="border border-border px-2 sm:px-3 py-2 text-text-secondary" {...props}>{children}</td>
           ),
           hr: (props) => (
             <hr className="border-border my-8" {...props} />

@@ -12,8 +12,8 @@ interface PostCardProps {
 export function PostCard({ title, description, date, category, slug, tags }: PostCardProps) {
   return (
     <Link href={`/articles/${slug}`} className="group block">
-      <article className="py-4 border-b border-border hover:border-border-hover transition-colors">
-        <div className="flex items-center gap-3 text-sm text-text-tertiary mb-1.5">
+      <article className="py-5 sm:py-4 border-b border-border hover:border-border-hover transition-colors">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-tertiary mb-1.5">
           <time dateTime={date}>{date}</time>
           {category && (
             <>

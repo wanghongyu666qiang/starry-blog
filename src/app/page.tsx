@@ -29,8 +29,8 @@ export default async function Home() {
       <HeroSection zhiXue={zhiXue} />
 
       {/* Featured Projects */}
-      <section className="mx-auto max-w-5xl px-6 pb-24">
-        <div className="flex items-center justify-between mb-8">
+      <section className="mx-auto max-w-5xl px-5 sm:px-6 pb-16 sm:pb-24">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <h2 className="text-xl font-semibold text-text-primary">精选项目</h2>
           <Link
             href="/projects"
@@ -39,7 +39,7 @@ export default async function Home() {
             全部项目 &rarr;
           </Link>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {featuredProjects.map((project) => (
             <ProjectCard
               key={project.slug}
@@ -54,8 +54,8 @@ export default async function Home() {
       </section>
 
       {/* Latest Articles */}
-      <section className="mx-auto max-w-5xl px-6 pb-24">
-        <div className="flex items-center justify-between mb-8">
+      <section className="mx-auto max-w-5xl px-5 sm:px-6 pb-16 sm:pb-24">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <h2 className="text-xl font-semibold text-text-primary">最新文章</h2>
           <Link
             href="/articles"
@@ -79,8 +79,8 @@ export default async function Home() {
       </section>
 
       {/* Timeline Preview */}
-      <section className="mx-auto max-w-5xl px-6 pb-24">
-        <div className="flex items-center justify-between mb-8">
+      <section className="mx-auto max-w-5xl px-5 sm:px-6 pb-16 sm:pb-24">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <h2 className="text-xl font-semibold text-text-primary">时间线</h2>
           <Link
             href="/timeline"

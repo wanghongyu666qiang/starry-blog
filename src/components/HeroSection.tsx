@@ -19,7 +19,7 @@ export function HeroSection({ zhiXue }: HeroSectionProps) {
   }, []);
 
   return (
-    <section className="mx-auto max-w-5xl px-6 pt-24 pb-16 sm:pt-32 sm:pb-24">
+    <section className="mx-auto max-w-5xl px-5 sm:px-6 pt-20 sm:pt-32 pb-12 sm:pb-24">
       <div className="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-10">
         {/* Avatar */}
         <div

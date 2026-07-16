@@ -18,7 +18,7 @@ export default async function TimelinePage() {
   const events = await getTimeline();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 pt-24 pb-24">
+    <div className="mx-auto max-w-3xl px-5 sm:px-6 pt-20 sm:pt-24 pb-16 sm:pb-24">
       <h1 className="text-3xl font-semibold tracking-tight text-text-primary">时间线</h1>
       <p className="mt-3 text-text-secondary">
         记录有意义的里程碑，而非日常动态。
