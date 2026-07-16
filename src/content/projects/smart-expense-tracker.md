@@ -1,8 +1,8 @@
 ---
 title: "智能开支追踪器"
-description: "基于 Vue 3 的个人财务管理应用，支持分类管理、预算提醒与数据可视化。"
+description: "基于 Vue 3 + Pinia 构建的轻量级财务画布。优化了大数据量下的 Chart.js 渲染性能，支持动态预算沙盒推演与高精度本地数据可视化。"
 date: "2026-03-15"
-role: "Frontend Developer — 负责 Vue 3 组件架构设计、Pinia 状态管理、Chart.js 可视化集成、CSV 导出功能"
+role: "Frontend Developer — 负责 Vue 3 组件架构设计、Pinia 状态管理、Chart.js 可视化集成、渲染性能优化、CSV 导出功能"
 tech_stack: ["Vue 3", "TypeScript", "Chart.js", "Pinia"]
 github_url: "https://github.com/wanghongyu666qiang/smart-expense-tracker"
 demo_url: null
