@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Neutral color palette — no accent color */
+  /* Neutral color palette — light default */
   --color-bg: #fafafa;
   --color-bg-alt: #f4f4f5;
   --color-surface: #ffffff;
@@ -30,6 +30,32 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease;
+}
+
+/* ── Warm theme ── */
+[data-theme="warm"] {
+  --color-bg: #fefce8;
+  --color-bg-alt: #fef9c3;
+}
+
+/* ── Gray theme ── */
+[data-theme="gray"] {
+  --color-bg: #f4f4f5;
+  --color-bg-alt: #e4e4e7;
+}
+
+/* ── Dark theme ── */
+[data-theme="dark"] {
+  --color-bg: #18181b;
+  --color-bg-alt: #27272a;
+  --color-surface: #27272a;
+  --color-border: #3f3f46;
+  --color-border-hover: #52525b;
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #71717a;
+  --color-text-inverse: #18181b;
 }
 
 /* Accessible focus ring */
@@ -37,4 +63,3 @@ body {
   outline: 2px solid var(--color-text-primary);
   outline-offset: 2px;
 }
-
