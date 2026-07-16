@@ -55,7 +55,7 @@ export function AdminFab() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState("light");
+  const [currentTheme, setCurrentTheme] = useState("warm");
   const [size, setSize] = useState(SIZE_DESKTOP);
 
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -74,7 +74,7 @@ export function AdminFab() {
     const p = loadPos(s);
     setPos(p);
 
-    const theme = localStorage.getItem(STORAGE_THEME) || "light";
+    const theme = localStorage.getItem(STORAGE_THEME) || "warm";
     setCurrentTheme(theme);
 
     const onResize = () => {

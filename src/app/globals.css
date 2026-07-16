@@ -2,8 +2,8 @@
 
 @theme inline {
   /* Neutral color palette — light default */
-  --color-bg: #fafafa;
-  --color-bg-alt: #f4f4f5;
+  --color-bg: #fefce8;
+  --color-bg-alt: #fef9c3;
   --color-surface: #ffffff;
   --color-border: #e4e4e7;
   --color-border-hover: #d4d4d8;
