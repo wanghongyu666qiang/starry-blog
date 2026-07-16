@@ -182,13 +182,13 @@ export function AdminFab() {
   const menuWidth = 160;
   const menuAbove = pos.y > 240;
 
+  if (!mounted) return null;
+
   // clamp center so the 160px-wide menu stays inside viewport
   const menuCenter = Math.max(
     menuWidth / 2 + 8,
     Math.min(window.innerWidth - menuWidth / 2 - 8, pos.x + size / 2)
   );
-
-  if (!mounted) return null;
 
   return (
     <div ref={containerRef}>
