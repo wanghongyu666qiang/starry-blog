@@ -1,4 +1,5 @@
 import { getTimeline } from "@/lib/data";
+import { BackButton } from "@/components/BackButton";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,7 +20,8 @@ export default async function TimelinePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-5 sm:px-6 pt-20 sm:pt-24 pb-16 sm:pb-24">
-      <h1 className="text-3xl font-semibold tracking-tight text-text-primary">时间线</h1>
+      <BackButton href="/" label="返回首页" />
+      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary">时间线</h1>
       <p className="mt-3 text-text-secondary">
         记录有意义的里程碑，而非日常动态。
       </p>

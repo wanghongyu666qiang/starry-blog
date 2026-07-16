@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BackButton } from "@/components/BackButton";
 import { getProjectBySlug } from "@/lib/data";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 
@@ -28,6 +29,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-5 sm:px-6 pt-20 sm:pt-24 pb-16 sm:pb-24">
+      <BackButton href="/projects" label="返回项目列表" />
+
       {/* Project Header */}
       <header>
         <div className="flex items-center gap-2 text-sm text-text-tertiary">

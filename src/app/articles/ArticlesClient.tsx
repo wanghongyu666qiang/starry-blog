@@ -1,4 +1,5 @@
 "use client";
+import { BackButton } from "@/components/BackButton";
 
 import { useState, useMemo } from "react";
 import { PostCard } from "@/components/PostCard";
@@ -47,7 +48,8 @@ export function ArticlesClient({ posts }: ArticlesClientProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-5 sm:px-6 pt-20 sm:pt-24 pb-16 sm:pb-24">
-      <h1 className="text-3xl font-semibold tracking-tight text-text-primary">文章</h1>
+      <BackButton href="/" label="返回首页" />
+      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary">文章</h1>
       <p className="mt-3 text-text-secondary">
         技术写作、学习笔记与项目文档。
       </p>

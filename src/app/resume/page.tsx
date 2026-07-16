@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BackButton } from "@/components/BackButton";
 
 export const metadata: Metadata = {
   title: "简历",
@@ -8,7 +9,8 @@ export const metadata: Metadata = {
 export default function ResumePage() {
   return (
     <div className="mx-auto max-w-3xl px-6 pt-24 pb-24">
-      <h1 className="text-3xl font-semibold tracking-tight text-text-primary">简历</h1>
+      <BackButton href="/" label="返回首页" />
+      <h1 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary">简历</h1>
 
       {/* Education */}
       <section className="mt-12">

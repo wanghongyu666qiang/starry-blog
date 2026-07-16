@@ -4,6 +4,7 @@ import { getPostBySlug, getPosts } from "@/lib/data";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { PostCard } from "@/components/PostCard";
 
+import { BackButton } from "@/components/BackButton";
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
@@ -52,7 +53,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   return (
     <div className="mx-auto max-w-5xl px-5 sm:px-6 pt-20 sm:pt-24 pb-16 sm:pb-24">
       {/* Article Header */}
-      <header className="max-w-3xl mx-auto">
+      <BackButton href="/articles" label="返回文章列表" />
+      <header className="max-w-3xl mx-auto mt-6">
         <div className="flex items-center gap-3 text-sm text-text-tertiary">
           <time dateTime={article.created_at}>{article.created_at}</time>
           <span aria-hidden="true">|</span>
