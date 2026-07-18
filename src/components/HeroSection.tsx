@@ -5,22 +5,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { StarryLogo } from "@/components/StarryLogo";
 
-const spring = "cubic-bezier(0.16, 1, 0.3, 1)";
-const dur = "800ms";
+const spring = "cubic-bezier(0.22, 1, 0.36, 1)";
+const dur = "600ms";
 
 export function HeroSection() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setMounted(true), 80);
-    return () => clearTimeout(t1);
+    setMounted(true);
   }, []);
 
   const fadeIn = (delay: number) => ({
     opacity: mounted ? 1 : 0,
-    transform: mounted ? "translateY(0) scale(1)" : "translateY(16px) scale(0.97)",
-    transition: `opacity ${dur} ${spring}, transform ${dur} ${spring}`,
-    transitionDelay: `${delay}ms`,
+    transform: mounted ? "translateY(0) scale(1)" : "translateY(28px) scale(0.95)",
+    transition: `opacity ${dur} ${spring} ${delay}ms, transform ${dur} ${spring} ${delay}ms`,
   });
 
   return (
@@ -45,7 +43,7 @@ export function HeroSection() {
           {/* Title */}
           <h1
             className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl"
-            style={fadeIn(100)}
+            style={fadeIn(150)}
           >
             你好，我是 Starry。
           </h1>
@@ -53,20 +51,20 @@ export function HeroSection() {
           {/* Sub-headline */}
           <p
             className="mt-4 text-lg text-text-secondary leading-relaxed max-w-xl"
-            style={fadeIn(200)}
+            style={fadeIn(350)}
           >
             Software Engineering Student
           </p>
           <p
             className="mt-1 text-base text-text-secondary leading-relaxed max-w-xl"
-            style={fadeIn(280)}
+            style={fadeIn(550)}
           >
             海南大学软件工程在读。专注于 C++ WebAssembly
             底层移植与多智能体系统（MAS）协同机制。相信好的软件始于清晰的思考与优雅的工程实践。
           </p>
 
           {/* Focus tags */}
-          <div className="mt-5 flex flex-wrap gap-1.5" style={fadeIn(380)}>
+          <div className="mt-5 flex flex-wrap gap-1.5" style={fadeIn(800)}>
             {["AI Agent", "RAG", "WebAssembly", "Developer Tools"].map(
               (tag) => (
                 <span
@@ -80,7 +78,7 @@ export function HeroSection() {
           </div>
 
           {/* Contact */}
-          <div className="mt-6" style={fadeIn(480)}>
+          <div className="mt-6" style={fadeIn(1000)}>
             <p className="text-xs text-text-tertiary uppercase tracking-wider mb-3">
               Connect
             </p>
@@ -125,7 +123,7 @@ export function HeroSection() {
           </div>
 
           {/* CTA Buttons */}
-          <div className="mt-6 flex items-center gap-4" style={fadeIn(600)}>
+          <div className="mt-6 flex items-center gap-4" style={fadeIn(1200)}>
             {/* Primary: magnetic lift + slow glow */}
             <Link
               href="/articles"
