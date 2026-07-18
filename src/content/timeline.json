@@ -6,7 +6,10 @@
     "description": "入读海南大学海甸校区软件工程专业。",
     "type": "milestone",
     "link": null,
-    "created_at": "2025-09-01"
+    "created_at": "2025-09-01",
+    "context": "高考后选择了软件工程方向，希望用代码构建真正有用的东西。",
+    "what_did": "进入海甸校区，开始系统学习程序设计基础、高等数学等课程。",
+    "learned": "大学不仅是学技术，更是学习如何自学——这是后来所有项目的基础。"
   },
   {
     "id": "2",
@@ -15,7 +18,10 @@
     "description": "系统学习检索增强生成技术原理，开始规划基于个人知识库的 Obsidian AI 插件。",
     "type": "milestone",
     "link": "/projects/zhi-xue",
-    "created_at": "2026-05-17"
+    "created_at": "2026-05-17",
+    "context": "Obsidian 里积累了越来越多的笔记，但手动检索越来越低效。我希望有一个真正理解我知识库的 AI 助手。",
+    "what_did": "搭建了 obsidian-rag 项目骨架：Obsidian 插件前端（TypeScript）+ Python/FastAPI 后端，集成 LightRAG 图检索。支持本地 Ollama 和云端 SiliconFlow 双模型切换。",
+    "learned": "RAG 系统的难点不在模型本身，而在如何将非结构化笔记转化为可检索的知识图谱。LightRAG 的图结构比传统向量检索更适合个人知识库场景。"
   },
   {
     "id": "3",
@@ -24,7 +30,10 @@
     "description": "将海南大学导航系统以 WebAssembly 形式部署至 GitHub Pages，完成数据结构课程设计项目。",
     "type": "project",
     "link": "/projects/hainanu-navigation",
-    "created_at": "2026-06-17"
+    "created_at": "2026-06-17",
+    "context": "数据结构课程设计要求实现一个图算法应用。我不满足于控制台输出，想让它在浏览器里真正跑起来。",
+    "what_did": "用 C++ 实现双图架构（步行图 + 车行图），覆盖海甸、儋州、城西三个校区约 50 个节点。核心创新点：DFS + 哈希表必经点筛选、红绿灯路口统计。通过 Emscripten 编译为 WebAssembly，部署到 GitHub Pages。",
+    "learned": "WebAssembly 编译链路（C++ → LLVM → wasm）比预期的坑多，尤其是路径处理和内存管理。但一旦跑通，C++ 在浏览器里的性能远超纯 JS。"
   },
   {
     "id": "4",
@@ -33,7 +42,10 @@
     "description": "完成 Vue 3 开支追踪应用，实现 8 项核心功能，包括分类管理、预算提醒与数据可视化。",
     "type": "project",
     "link": "/projects/smart-expense-tracker",
-    "created_at": "2026-06-19"
+    "created_at": "2026-06-19",
+    "context": "日常消费记录分散在微信、支付宝、银行卡多个渠道，没有一个统一的视图。我需要一个简单但够用的追踪工具。",
+    "what_did": "用 Vue 3 Composition API + Pinia 状态管理搭建单页应用。核心功能：支出列表（v-for）、添加表单（v-model）、分类筛选（computed）、标题搜索、总金额统计、消费状态标签、类别样式绑定。6 种支出类别、3 种支付方式。",
+    "learned": "Vue 3 的 Composition API 比 Options API 更适合状态复杂的场景。Pinia 的 store 设计比 Vuex 更简洁。这类 CRUD 应用的核心难点在 UI 交互设计，而非后端逻辑。"
   },
   {
     "id": "5",
@@ -42,7 +54,10 @@
     "description": "开始系统梳理多智能体系统聚合机制文献，研读 Free-MAD、DeLLMphi、LLMASC 等相关协调模式论文。",
     "type": "milestone",
     "link": "/articles/mas-aggregation-survey",
-    "created_at": "2026-06-25"
+    "created_at": "2026-06-25",
+    "context": "做完智学 RAG 插件后，我开始思考一个更底层的问题：当多个 AI 智能体需要协作时，它们如何讨论、投票、达成共识？这不是工程问题，而是需要从学术文献中寻找答案。",
+    "what_did": "系统研读 4 篇核心论文：Free-MAD（自由辩论聚合）、DeLLMphi（德尔菲法 LLM 聚合）、LLMASC（多智能体协同）、Wisard of Deliberating（审议机制）。梳理了讨论→投票→共识→行动的四阶段框架。",
+    "learned": "MAS 中最大的挑战不是模型能力，而是信息不对称和观点冲突时的协调机制。不同聚合策略（多数投票 vs 加权共识 vs 审议辩论）在不同场景下有截然不同的表现。"
   },
   {
     "id": "6",
@@ -51,6 +66,9 @@
     "description": "完成个人知识库 RAG 助手开发，实现本地 Ollama + 云端 SiliconFlow 双模型支持。",
     "type": "project",
     "link": "/projects/zhi-xue",
-    "created_at": "2026-07-01"
+    "created_at": "2026-07-01",
+    "context": "从 5 月开始搭建框架，到 7 月完成第一个可用版本。这期间最大的工程挑战是如何让 AI 在本地和云端之间无缝切换。",
+    "what_did": "完整实现 Obsidian 侧边栏对话界面、LightRAG 图检索管道、双模型适配层。用户可以在本地隐私模式和云端高性能模式之间自由切换。",
+    "learned": "Obsidian 插件开发的生态比预期的要复杂——API 文档不全、社区插件质量参差不齐。但文件驱动的架构天然适合 RAG：所有笔记已经是结构化的 Markdown，不需要额外的数据管道。"
   }
 ]

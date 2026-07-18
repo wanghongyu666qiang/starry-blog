@@ -69,6 +69,9 @@ export default async function Home() {
               date={article.created_at}
               category={article.category || undefined}
               slug={article.slug}
+              tags={article.tags}
+              readingTime={article.reading_time}
+              difficulty={article.difficulty}
             />
           ))}
         </div>

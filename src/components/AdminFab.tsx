@@ -10,6 +10,7 @@ const DRAG_THRESHOLD = 5;
 type View = "menu" | "login" | "theme";
 
 const THEMES = [
+  { name: "星空", key: "starry", bg: "#0B1020" },
   { name: "浅色", key: "light", bg: "#fafafa" },
   { name: "暖黄", key: "warm", bg: "#fefce8" },
   { name: "灰色", key: "gray", bg: "#f4f4f5" },

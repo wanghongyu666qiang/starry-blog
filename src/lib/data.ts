@@ -5,6 +5,21 @@ import type { Post, Project, TimelineEvent } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content");
 
+// ---- Helpers ----
+
+function computeReadingTime(content: string): number {
+  // 中文字符 + 英文单词估算，约 400 字/分钟
+  const chineseChars = (content.match(/[\u4e00-\u9fff]/g) || []).length;
+  const englishWords = (content.match(/[a-zA-Z]+/g) || []).length;
+  const total = chineseChars + englishWords;
+  return Math.max(1, Math.ceil(total / 400));
+}
+
+function computeDifficulty(category: string | null): string {
+  if (category === "Research" || category === "Engineering") return "进阶";
+  return "入门";
+}
+
 // ---- Posts ----
 
 function readPostsDir(): Post[] {
@@ -30,6 +45,8 @@ function readPostsDir(): Post[] {
         published: data.published !== false,
         created_at: data.date || "",
         updated_at: data.updated || data.date || "",
+        reading_time: computeReadingTime(content),
+        difficulty: computeDifficulty(data.category || null),
       } as Post;
     })
     .filter((p) => p.published)
@@ -61,6 +78,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     published: data.published !== false,
     created_at: data.date || "",
     updated_at: data.updated || data.date || "",
+    reading_time: computeReadingTime(content),
+    difficulty: computeDifficulty(data.category || null),
   } as Post;
 }
 

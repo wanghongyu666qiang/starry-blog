@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getPostBySlug, getPosts } from "@/lib/data";
+import { displayCategory } from "@/lib/utils";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { PostCard } from "@/components/PostCard";
 
 import { BackButton } from "@/components/BackButton";
+import { ReadingProgress } from "@/components/ReadingProgress";
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
 }
@@ -51,14 +53,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     .slice(0, 2);
 
   return (
-    <div className="mx-auto max-w-5xl px-5 sm:px-6 pt-20 sm:pt-24 pb-16 sm:pb-24">
+    <>
+      <ReadingProgress />
+      <div className="mx-auto max-w-5xl px-5 sm:px-6 pt-20 sm:pt-24 pb-16 sm:pb-24">
       {/* Article Header */}
       <BackButton href="/articles" label="返回文章列表" />
       <header className="max-w-3xl mx-auto mt-6">
-        <div className="flex items-center gap-3 text-sm text-text-tertiary">
+        <div className="flex items-center gap-2 text-xs text-text-tertiary">
           <time dateTime={article.created_at}>{article.created_at}</time>
-          <span aria-hidden="true">|</span>
-          <span>{article.category}</span>
+          <span aria-hidden="true">·</span>
+          <span>{displayCategory(article.category)}</span>
+          <span aria-hidden="true">·</span>
+          <span>{article.difficulty}</span>
+          <span aria-hidden="true">·</span>
+          <span>{article.reading_time} min read</span>
         </div>
         <h1 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
           {article.title}
@@ -123,10 +131,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               date={post.created_at}
               category={post.category || undefined}
               slug={post.slug}
+              tags={post.tags}
+              readingTime={post.reading_time}
+              difficulty={post.difficulty}
             />
           ))}
         </section>
       )}
     </div>
+    </>
   );
 }

@@ -99,6 +99,8 @@ export function ArticlesClient({ posts }: ArticlesClientProps) {
               category={post.category || undefined}
               slug={post.slug}
               tags={post.tags.length > 0 ? post.tags : undefined}
+              readingTime={post.reading_time}
+              difficulty={post.difficulty}
             />
           ))
         ) : (

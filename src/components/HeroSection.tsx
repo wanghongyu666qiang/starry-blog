@@ -3,28 +3,31 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { StarryLogo } from "@/components/StarryLogo";
+
+const spring = "cubic-bezier(0.16, 1, 0.3, 1)";
+const dur = "800ms";
 
 export function HeroSection() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Staggered fade-in
-    const t1 = setTimeout(() => setMounted(true), 50);
+    const t1 = setTimeout(() => setMounted(true), 80);
     return () => clearTimeout(t1);
   }, []);
 
+  const fadeIn = (delay: number) => ({
+    opacity: mounted ? 1 : 0,
+    transform: mounted ? "translateY(0) scale(1)" : "translateY(16px) scale(0.97)",
+    transition: `opacity ${dur} ${spring}, transform ${dur} ${spring}`,
+    transitionDelay: `${delay}ms`,
+  });
+
   return (
-    <section className="mx-auto max-w-5xl px-5 sm:px-6 pt-20 sm:pt-32 pb-12 sm:pb-24">
+    <section className="mx-auto max-w-5xl px-5 sm:px-6 pt-20 sm:pt-32 pb-12 sm:pb-24 relative">
       <div className="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-10">
         {/* Avatar */}
-        <div
-          className="shrink-0 transition-all duration-700 ease-out"
-          style={{
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? "translateY(0)" : "translateY(12px)",
-            transitionDelay: "0ms",
-          }}
-        >
+        <div className="shrink-0" style={fadeIn(0)}>
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-border bg-bg-alt">
             <Image
               src="/avatar.jpg"
@@ -41,48 +44,29 @@ export function HeroSection() {
         <div>
           {/* Title */}
           <h1
-            className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl transition-all duration-700 ease-out"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(12px)",
-              transitionDelay: "100ms",
-            }}
+            className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl"
+            style={fadeIn(100)}
           >
             你好，我是 Starry。
           </h1>
 
           {/* Sub-headline */}
           <p
-            className="mt-4 text-lg text-text-secondary leading-relaxed max-w-xl transition-all duration-700 ease-out"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(12px)",
-              transitionDelay: "200ms",
-            }}
+            className="mt-4 text-lg text-text-secondary leading-relaxed max-w-xl"
+            style={fadeIn(200)}
           >
             Software Engineering Student
           </p>
           <p
-            className="mt-1 text-base text-text-secondary leading-relaxed max-w-xl transition-all duration-700 ease-out"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(12px)",
-              transitionDelay: "250ms",
-            }}
+            className="mt-1 text-base text-text-secondary leading-relaxed max-w-xl"
+            style={fadeIn(280)}
           >
             海南大学软件工程在读。专注于 C++ WebAssembly
             底层移植与多智能体系统（MAS）协同机制。相信好的软件始于清晰的思考与优雅的工程实践。
           </p>
 
           {/* Focus tags */}
-          <div
-            className="mt-5 flex flex-wrap gap-1.5 transition-all duration-700 ease-out"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(12px)",
-              transitionDelay: "350ms",
-            }}
-          >
+          <div className="mt-5 flex flex-wrap gap-1.5" style={fadeIn(380)}>
             {["AI Agent", "RAG", "WebAssembly", "Developer Tools"].map(
               (tag) => (
                 <span
@@ -96,14 +80,7 @@ export function HeroSection() {
           </div>
 
           {/* Contact */}
-          <div
-            className="mt-6 transition-all duration-700 ease-out"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(12px)",
-              transitionDelay: "450ms",
-            }}
-          >
+          <div className="mt-6" style={fadeIn(480)}>
             <p className="text-xs text-text-tertiary uppercase tracking-wider mb-3">
               Connect
             </p>
@@ -148,14 +125,7 @@ export function HeroSection() {
           </div>
 
           {/* CTA Buttons */}
-          <div
-            className="mt-6 flex items-center gap-4 transition-all duration-700 ease-out"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(12px)",
-              transitionDelay: "650ms",
-            }}
-          >
+          <div className="mt-6 flex items-center gap-4" style={fadeIn(600)}>
             {/* Primary: magnetic lift + slow glow */}
             <Link
               href="/articles"
@@ -180,6 +150,11 @@ export function HeroSection() {
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Watermark logo */}
+      <div className="hidden lg:block absolute right-6 top-16 pointer-events-none">
+        <StarryLogo size={200} watermark />
       </div>
     </section>
   );

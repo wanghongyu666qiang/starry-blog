@@ -3,6 +3,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AdminFab } from "@/components/AdminFab";
+import { BackToTop } from "@/components/BackToTop";
+import { StarryBackground } from "@/components/StarryBackground";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,11 +36,12 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('starry-theme');if(t)document.documentElement.setAttribute('data-theme',t)})()`,
+            __html: `(function(){var t=localStorage.getItem('starry-theme')||'warm';document.documentElement.setAttribute('data-theme',t)})()`,
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col relative">
+        <StarryBackground />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:bg-text-primary focus:text-text-inverse focus:text-sm"
@@ -49,6 +52,7 @@ export default function RootLayout({
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
         <AdminFab />
+        <BackToTop />
         <Analytics />
       </body>
     </html>

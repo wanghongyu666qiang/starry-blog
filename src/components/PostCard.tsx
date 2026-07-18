@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { displayCategory } from "@/lib/utils";
 
 interface PostCardProps {
   title: string;
@@ -7,18 +8,32 @@ interface PostCardProps {
   category?: string;
   slug: string;
   tags?: string[];
+  readingTime?: number;
+  difficulty?: string;
 }
 
-export function PostCard({ title, description, date, category, slug, tags }: PostCardProps) {
+export function PostCard({ title, description, date, category, slug, tags, readingTime, difficulty }: PostCardProps) {
   return (
     <Link href={`/articles/${slug}`} className="group block">
       <article className="py-5 sm:py-4 border-b border-border hover:border-border-hover transition-colors">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-tertiary mb-1.5">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-tertiary mb-1.5">
           <time dateTime={date}>{date}</time>
           {category && (
             <>
-              <span aria-hidden="true" className="text-border">|</span>
-              <span>{category}</span>
+              <span aria-hidden="true">·</span>
+              <span>{displayCategory(category)}</span>
+            </>
+          )}
+          {difficulty && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>{difficulty}</span>
+            </>
+          )}
+          {readingTime != null && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>{readingTime} min read</span>
             </>
           )}
         </div>

@@ -20,31 +20,38 @@ export function TimelinePreview({ events }: TimelinePreviewProps) {
       {events.map((event, index) => {
         const isLatest = index === 0;
         const isExpanded = expandedId === event.id;
-        const hasDetail = event.description && event.description.length > 0;
+        const hasNarrative = event.context || event.what_did || event.learned;
 
         return (
           <div key={event.id} className="relative">
-            {/* Timeline dot */}
-            <span
-              className={`absolute -left-[31px] top-0.5 w-3 h-3 border-2 rounded-full transition-colors duration-300 cursor-pointer
-                ${isLatest ? "border-text-primary bg-text-primary" : "border-border bg-surface hover:border-text-primary/50"}
-              `}
-              onClick={() => hasDetail && toggle(event.id)}
-            >
-              {isLatest && (
-                <span className="absolute inset-0 rounded-full bg-text-primary animate-ping opacity-30" />
-              )}
-            </span>
+            {/* Timeline dot — brand-aware */}
+            {isLatest ? (
+              /* Current: purple glow + halo */
+              <span
+                className="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full cursor-pointer"
+                onClick={() => hasNarrative && toggle(event.id)}
+              >
+                <span className="absolute -inset-1.5 rounded-full bg-[#8B7CFF]/15 animate-ping" />
+                <span className="absolute -inset-0.5 rounded-full bg-[#8B7CFF]/30 animate-pulse" />
+                <span className="absolute inset-0 rounded-full bg-[#8B7CFF] border-2 border-[#8B7CFF]/50" />
+              </span>
+            ) : (
+              /* Past: dim solid dot */
+              <span
+                className="absolute -left-[31px] top-0.5 w-3 h-3 rounded-full bg-[#5A6A8A] border-2 border-[#5A6A8A]/30 cursor-pointer hover:bg-[#8B7CFF]/50 transition-colors duration-300"
+                onClick={() => hasNarrative && toggle(event.id)}
+              />
+            )}
 
             {/* Clickable header */}
             <button
-              onClick={() => hasDetail && toggle(event.id)}
-              className={`text-left w-full ${hasDetail ? "cursor-pointer" : "cursor-default"}`}
+              onClick={() => hasNarrative && toggle(event.id)}
+              className={`text-left w-full ${hasNarrative ? "cursor-pointer" : "cursor-default"}`}
             >
               <time className="text-sm text-text-tertiary">{event.date}</time>
               <p className="mt-0.5 text-text-primary group-hover:text-text-secondary transition-colors">
                 {event.title}
-                {hasDetail && (
+                {hasNarrative && (
                   <span className="ml-1.5 text-xs text-text-tertiary">
                     {isExpanded ? "▾" : "▸"}
                   </span>
@@ -52,20 +59,37 @@ export function TimelinePreview({ events }: TimelinePreviewProps) {
               </p>
             </button>
 
-            {/* Expandable detail */}
-            {hasDetail && (
+            {/* Expandable narrative */}
+            {hasNarrative && (
               <div
                 className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                  isExpanded ? "max-h-40 mt-2" : "max-h-0"
+                  isExpanded ? "max-h-96 mt-2" : "max-h-0"
                 }`}
               >
-                <p className="text-sm text-text-secondary leading-relaxed pb-1">
-                  {event.description}
-                </p>
+                <div className="text-sm text-text-secondary leading-relaxed space-y-2 pb-1">
+                  {event.context && (
+                    <div>
+                      <span className="font-medium text-text-primary">背景：</span>
+                      {event.context}
+                    </div>
+                  )}
+                  {event.what_did && (
+                    <div>
+                      <span className="font-medium text-text-primary">做了什么：</span>
+                      {event.what_did}
+                    </div>
+                  )}
+                  {event.learned && (
+                    <div>
+                      <span className="font-medium text-text-primary">学到了什么：</span>
+                      {event.learned}
+                    </div>
+                  )}
+                </div>
                 {event.link && (
                   <Link
                     href={event.link}
-                    className="inline-block mt-1 text-xs text-text-tertiary hover:text-text-primary transition-colors"
+                    className="inline-block mt-2 text-xs text-text-tertiary hover:text-text-primary transition-colors"
                   >
                     查看详情 &rarr;
                   </Link>

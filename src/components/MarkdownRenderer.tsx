@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -8,6 +8,41 @@ import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/github.css";
+
+// ---- Code block with copy button ----
+
+function CodeBlock({ children, ...props }: { children: React.ReactNode }) {
+  const [copied, setCopied] = useState(false);
+  const preRef = useRef<HTMLPreElement>(null);
+
+  const handleCopy = useCallback(() => {
+    const text = preRef.current?.textContent || "";
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, []);
+
+  return (
+    <div className="relative group my-6">
+      <pre
+        ref={preRef}
+        className="overflow-x-auto border border-border bg-bg-alt p-3 sm:p-4 text-xs sm:text-sm pr-10"
+        {...props}
+      >
+        {children}
+      </pre>
+      <button
+        onClick={handleCopy}
+        className="absolute top-2 right-2 px-2 py-1 text-xs text-text-tertiary hover:text-text-primary border border-border bg-bg-alt opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+      >
+        {copied ? "已复制" : "复制"}
+      </button>
+    </div>
+  );
+}
+
+// ---- Markdown renderer ----
 
 interface MarkdownRendererProps {
   content: string;
@@ -38,9 +73,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
         rehypePlugins={[rehypeKatex, rehypeHighlight]}
         components={{
           pre: ({ children, ...props }) => (
-            <pre className="overflow-x-auto border border-border bg-bg-alt p-3 sm:p-4 text-xs sm:text-sm my-6" {...props}>
-              {children}
-            </pre>
+            <CodeBlock {...props}>{children}</CodeBlock>
           ),
           code: ({ className, children, ...props }) => {
             const isInline = !className;

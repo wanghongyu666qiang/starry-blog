@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Neutral color palette — light default */
+  /* ── Warm palette (default) ── */
   --color-bg: #fefce8;
   --color-bg-alt: #fef9c3;
   --color-surface: #ffffff;
@@ -11,6 +11,11 @@
   --color-text-secondary: #52525b;
   --color-text-tertiary: #a1a1aa;
   --color-text-inverse: #fafafa;
+
+  /* Accent colors */
+  --color-accent-purple: #8B7CFF;
+  --color-accent-blue: #56C7FF;
+  --color-accent-yellow: #FFD76A;
 
   /* System font stack */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -33,16 +38,56 @@ body {
   transition: background-color 0.3s ease;
 }
 
+/* ── Starry (deep space) theme ── */
+[data-theme="starry"] {
+  --color-bg: #0B1020;
+  --color-bg-alt: #121A2F;
+  --color-surface: #121A2F;
+  --color-border: #1E2A45;
+  --color-border-hover: #2A3A5C;
+  --color-text-primary: #E8ECF7;
+  --color-text-secondary: #8E9AB8;
+  --color-text-tertiary: #5A6A8A;
+  --color-text-inverse: #0B1020;
+}
+
+/* ── Light theme ── */
+[data-theme="light"] {
+  --color-bg: #fafafa;
+  --color-bg-alt: #f4f4f5;
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
+  --color-border-hover: #d4d4d8;
+  --color-text-primary: #18181b;
+  --color-text-secondary: #52525b;
+  --color-text-tertiary: #a1a1aa;
+  --color-text-inverse: #fafafa;
+}
+
 /* ── Warm theme ── */
 [data-theme="warm"] {
   --color-bg: #fefce8;
   --color-bg-alt: #fef9c3;
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
+  --color-border-hover: #d4d4d8;
+  --color-text-primary: #18181b;
+  --color-text-secondary: #52525b;
+  --color-text-tertiary: #a1a1aa;
+  --color-text-inverse: #fafafa;
 }
 
 /* ── Gray theme ── */
 [data-theme="gray"] {
   --color-bg: #f4f4f5;
   --color-bg-alt: #e4e4e7;
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
+  --color-border-hover: #d4d4d8;
+  --color-text-primary: #18181b;
+  --color-text-secondary: #52525b;
+  --color-text-tertiary: #a1a1aa;
+  --color-text-inverse: #fafafa;
 }
 
 /* ── Dark theme ── */
@@ -58,8 +103,50 @@ body {
   --color-text-inverse: #18181b;
 }
 
+/* ── Logo orbit animation ── */
+@keyframes orbit-draw {
+  from { stroke-dashoffset: 200; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes star-slide {
+  from { offset-distance: 0%; }
+  to   { offset-distance: 100%; }
+}
+
+@keyframes star-glow {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  50%      { opacity: 1; transform: scale(1); }
+}
+
+/* ── Starry background twinkling ── */
+.starry-bg { z-index: 0; }
+
+.starry-dot {
+  animation-name: starry-twinkle;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes starry-twinkle {
+  0%   { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
 /* Accessible focus ring */
 *:focus-visible {
   outline: 2px solid var(--color-text-primary);
   outline-offset: 2px;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

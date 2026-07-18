@@ -10,6 +10,8 @@ export interface Post {
   published: boolean;
   created_at: string;
   updated_at: string;
+  reading_time: number;
+  difficulty: string;
 }
 
 export interface Project {
@@ -36,6 +38,9 @@ export interface TimelineEvent {
   type: string;
   link: string | null;
   created_at: string;
+  context?: string;
+  what_did?: string;
+  learned?: string;
 }
 
 export interface ProfileSection {

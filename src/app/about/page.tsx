@@ -117,7 +117,12 @@ export default function AboutPage() {
           </p>
           <p>
             <span className="text-text-tertiary">邮箱：</span>
-            <span className="text-text-secondary">如需请联系</span>
+            <a
+              href="mailto:why17573315302@gmail.com"
+              className="text-text-secondary hover:text-text-primary transition-colors"
+            >
+              why17573315302@gmail.com
+            </a>
           </p>
         </div>
       </section>
