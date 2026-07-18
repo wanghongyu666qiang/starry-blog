@@ -4,7 +4,6 @@ import { HeroSection } from "@/components/HeroSection";
 import { PostCard } from "@/components/PostCard";
 import { ProjectCard } from "@/components/ProjectCard";
 import { TimelinePreview } from "@/components/TimelinePreview";
-import { SubscribeCard } from "@/components/SubscribeCard";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -20,13 +19,10 @@ export default async function Home() {
   const latestArticles = posts.slice(0, 3);
   const timelinePreview = timeline.slice(0, 5);
 
-  // Find zhi-xue project for "Currently building"
-  const zhiXue = projects.find((p) => p.slug === "zhi-xue");
-
   return (
     <>
       {/* Hero */}
-      <HeroSection zhiXue={zhiXue} />
+      <HeroSection />
 
       {/* Featured Projects */}
       <section className="mx-auto max-w-5xl px-5 sm:px-6 pb-16 sm:pb-24">
@@ -91,9 +87,6 @@ export default async function Home() {
         </div>
         <TimelinePreview events={timelinePreview} />
       </section>
-
-      {/* Subscription */}
-      <SubscribeCard />
     </>
   );
 }

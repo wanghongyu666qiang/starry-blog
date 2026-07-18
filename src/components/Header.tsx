@@ -30,17 +30,6 @@ export function Header() {
               </Link>
             </li>
           ))}
-          <li>
-            <a
-              href="https://github.com/wanghongyu666qiang"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-2 md:px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors rounded-md"
-              aria-label="GitHub 主页（外部链接）"
-            >
-              GitHub
-            </a>
-          </li>
         </ul>
       </nav>
     </header>
