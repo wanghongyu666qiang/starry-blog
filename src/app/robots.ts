@@ -1,15 +1,10 @@
 import type { MetadataRoute } from "next";
+import { absoluteUrl, SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://starry.os.kg";
   return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: ["/admin/", "/api/"],
-      },
-    ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    rules: [{ userAgent: "*", allow: "/" }],
+    sitemap: absoluteUrl("/sitemap.xml"),
+    host: SITE_URL,
   };
 }

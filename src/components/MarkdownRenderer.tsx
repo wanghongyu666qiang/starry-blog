@@ -1,150 +1,199 @@
-"use client";
-
-import { useEffect, useRef, useState, useCallback } from "react";
+import {
+  isValidElement,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeHighlight from "rehype-highlight";
+import rehypeSlug from "rehype-slug";
+import { CopyButton } from "./CopyButton";
+import { MermaidBlock } from "./MermaidBlock";
 import "katex/dist/katex.min.css";
 import "highlight.js/styles/github.css";
 
-// ---- Code block with copy button ----
+function textFromNode(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(textFromNode).join("");
+  if (isValidElement<{ children?: ReactNode }>(node)) {
+    return textFromNode(node.props.children);
+  }
+  return "";
+}
 
-function CodeBlock({ children, ...props }: { children: React.ReactNode }) {
-  const [copied, setCopied] = useState(false);
-  const preRef = useRef<HTMLPreElement>(null);
+function CodeBlock({
+  children,
+  ...props
+}: HTMLAttributes<HTMLPreElement>) {
+  const child = isValidElement<{ className?: string; children?: ReactNode }>(
+    children,
+  )
+    ? children
+    : null;
+  const className = child?.props.className ?? "";
+  const code = textFromNode(child?.props.children ?? children).replace(/\n$/, "");
 
-  const handleCopy = useCallback(() => {
-    const text = preRef.current?.textContent || "";
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }, []);
+  if (className.includes("language-mermaid")) {
+    return <MermaidBlock code={code} />;
+  }
 
   return (
-    <div className="relative group my-6">
+    <div className="group relative my-6">
       <pre
-        ref={preRef}
-        className="overflow-x-auto border border-border bg-bg-alt p-3 sm:p-4 text-xs sm:text-sm pr-10"
+        className="overflow-x-auto border border-border bg-bg-alt p-3 pr-14 text-xs sm:p-4 sm:pr-16 sm:text-sm"
         {...props}
       >
         {children}
       </pre>
-      <button
-        onClick={handleCopy}
-        className="absolute top-2 right-2 px-2 py-1 text-xs text-text-tertiary hover:text-text-primary border border-border bg-bg-alt opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-      >
-        {copied ? "已复制" : "复制"}
-      </button>
+      <CopyButton text={code} />
     </div>
   );
 }
 
-// ---- Markdown renderer ----
-
-interface MarkdownRendererProps {
-  content: string;
-}
-
-export function MarkdownRenderer({ content }: MarkdownRendererProps) {
-  const mermaidRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function renderMermaid() {
-      const mermaid = (await import("mermaid")).default;
-      if (cancelled || !mermaidRef.current) return;
-      mermaid.initialize({ startOnLoad: false, theme: "neutral" });
-      const blocks = mermaidRef.current?.querySelectorAll(".mermaid");
-      if (blocks && blocks.length > 0) {
-        await mermaid.run({ nodes: Array.from(blocks) as HTMLElement[] });
-      }
-    }
-    renderMermaid();
-    return () => { cancelled = true; };
-  }, [content]);
-
+export function MarkdownRenderer({ content }: { content: string }) {
   return (
-    <div ref={mermaidRef}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkMath]}
-        rehypePlugins={[rehypeKatex, rehypeHighlight]}
-        components={{
-          pre: ({ children, ...props }) => (
-            <CodeBlock {...props}>{children}</CodeBlock>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[
+        rehypeSlug,
+        rehypeKatex,
+        [rehypeHighlight, { plainText: ["mermaid"] }],
+      ]}
+      components={{
+        pre: CodeBlock,
+        code: ({ className, children, ...props }) =>
+          className ? (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          ) : (
+            <code
+              className="break-words border border-border bg-bg-alt px-1.5 py-0.5 text-xs sm:text-sm"
+              {...props}
+            >
+              {children}
+            </code>
           ),
-          code: ({ className, children, ...props }) => {
-            const isInline = !className;
-            if (isInline) {
-              return (
-                <code className="px-1.5 py-0.5 text-xs sm:text-sm bg-bg-alt border border-border break-all" {...props}>
-                  {children}
-                </code>
-              );
-            }
-            return (
-              <code className={className} {...props}>
-                {children}
-              </code>
-            );
-          },
-          h1: ({ children, ...props }) => (
-            <h1 className="text-2xl sm:text-3xl font-semibold text-text-primary mt-12 sm:mt-16 mb-4 sm:mb-6" {...props}>{children}</h1>
-          ),
-          h2: ({ children, ...props }) => (
-            <h2 className="text-lg sm:text-xl font-semibold text-text-primary mt-8 sm:mt-12 mb-3 sm:mb-4" {...props}>{children}</h2>
-          ),
-          h3: ({ children, ...props }) => (
-            <h3 className="text-base sm:text-lg font-medium text-text-primary mt-6 sm:mt-8 mb-2 sm:mb-3" {...props}>{children}</h3>
-          ),
-          p: ({ children, ...props }) => (
-            <p className="text-sm sm:text-base text-text-secondary leading-relaxed my-4" {...props}>{children}</p>
-          ),
-          a: ({ children, href, ...props }) => (
-            <a href={href} className="text-text-primary underline underline-offset-2 decoration-border hover:decoration-text-primary transition-colors break-all" {...props}>
+        h1: ({ children, ...props }) => (
+          <h1
+            className="mb-4 mt-12 scroll-mt-24 text-2xl font-semibold text-text-primary sm:mb-6 sm:mt-16 sm:text-3xl"
+            {...props}
+          >
+            {children}
+          </h1>
+        ),
+        h2: ({ children, ...props }) => (
+          <h2
+            className="mb-3 mt-8 scroll-mt-24 text-lg font-semibold text-text-primary sm:mb-4 sm:mt-12 sm:text-xl"
+            {...props}
+          >
+            {children}
+          </h2>
+        ),
+        h3: ({ children, ...props }) => (
+          <h3
+            className="mb-2 mt-6 scroll-mt-24 text-base font-medium text-text-primary sm:mb-3 sm:mt-8 sm:text-lg"
+            {...props}
+          >
+            {children}
+          </h3>
+        ),
+        p: ({ children, ...props }) => (
+          <p
+            className="my-4 text-sm leading-relaxed text-text-secondary sm:text-base"
+            {...props}
+          >
+            {children}
+          </p>
+        ),
+        a: ({ children, href, ...props }) => {
+          const external = Boolean(href?.startsWith("http"));
+          return (
+            <a
+              href={href}
+              className="break-words text-text-primary underline decoration-border underline-offset-2 transition-colors hover:decoration-text-primary"
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
+              {...props}
+            >
               {children}
             </a>
-          ),
-          ul: ({ children, ...props }) => (
-            <ul className="list-disc pl-5 sm:pl-6 my-4 space-y-1.5 text-sm sm:text-base text-text-secondary" {...props}>{children}</ul>
-          ),
-          ol: ({ children, ...props }) => (
-            <ol className="list-decimal pl-5 sm:pl-6 my-4 space-y-1.5 text-sm sm:text-base text-text-secondary" {...props}>{children}</ol>
-          ),
-          li: ({ children, ...props }) => (
-            <li className="leading-relaxed" {...props}>{children}</li>
-          ),
-          blockquote: ({ children, ...props }) => (
-            <blockquote className="border-l-2 border-border pl-3 sm:pl-4 my-4 text-sm sm:text-base text-text-tertiary italic" {...props}>{children}</blockquote>
-          ),
-          table: ({ children, ...props }) => (
-            <div className="overflow-x-auto my-6 -mx-5 sm:mx-0">
-              <table className="w-full text-xs sm:text-sm border-collapse" {...props}>{children}</table>
-            </div>
-          ),
-          th: ({ children, ...props }) => (
-            <th className="border border-border px-2 sm:px-3 py-2 text-left font-medium text-text-primary bg-bg-alt" {...props}>{children}</th>
-          ),
-          td: ({ children, ...props }) => (
-            <td className="border border-border px-2 sm:px-3 py-2 text-text-secondary" {...props}>{children}</td>
-          ),
-          hr: (props) => (
-            <hr className="border-border my-8" {...props} />
-          ),
-          img: ({ src, alt, ...props }) => (
-            <img
-              src={src}
-              alt={alt || ""}
-              className="max-w-full my-6"
+          );
+        },
+        ul: ({ children, ...props }) => (
+          <ul
+            className="my-4 list-disc space-y-1.5 pl-5 text-sm text-text-secondary sm:pl-6 sm:text-base"
+            {...props}
+          >
+            {children}
+          </ul>
+        ),
+        ol: ({ children, ...props }) => (
+          <ol
+            className="my-4 list-decimal space-y-1.5 pl-5 text-sm text-text-secondary sm:pl-6 sm:text-base"
+            {...props}
+          >
+            {children}
+          </ol>
+        ),
+        li: ({ children, ...props }) => (
+          <li className="leading-relaxed" {...props}>
+            {children}
+          </li>
+        ),
+        blockquote: ({ children, ...props }) => (
+          <blockquote
+            className="my-4 border-l-2 border-border pl-3 text-sm italic text-text-tertiary sm:pl-4 sm:text-base"
+            {...props}
+          >
+            {children}
+          </blockquote>
+        ),
+        table: ({ children, ...props }) => (
+          <div className="-mx-5 my-6 overflow-x-auto sm:mx-0">
+            <table
+              className="w-full border-collapse text-xs sm:text-sm"
               {...props}
-            />
-          ),
-        }}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
+            >
+              {children}
+            </table>
+          </div>
+        ),
+        th: ({ children, ...props }) => (
+          <th
+            className="border border-border bg-bg-alt px-2 py-2 text-left font-medium text-text-primary sm:px-3"
+            {...props}
+          >
+            {children}
+          </th>
+        ),
+        td: ({ children, ...props }) => (
+          <td
+            className="border border-border px-2 py-2 text-text-secondary sm:px-3"
+            {...props}
+          >
+            {children}
+          </td>
+        ),
+        hr: (props) => <hr className="my-8 border-border" {...props} />,
+        img: ({ src, alt, ...props }) => (
+          // Markdown content is validated at build time; unknown dimensions use
+          // native lazy loading to avoid inventing an incorrect aspect ratio.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={src}
+            alt={alt ?? ""}
+            loading="lazy"
+            decoding="async"
+            className="my-6 h-auto max-w-full border border-border"
+            {...props}
+          />
+        ),
+      }}
+    >
+      {content}
+    </ReactMarkdown>
   );
 }

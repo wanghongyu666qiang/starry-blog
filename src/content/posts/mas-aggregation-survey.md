@@ -5,6 +5,7 @@ date: "2026-06-25"
 category: "Research"
 tags: ["MAS", "LLM", "综述", "论文阅读", "AI研究"]
 published: true
+featured: true
 ---
 
 ## 引言

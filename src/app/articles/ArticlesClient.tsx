@@ -1,7 +1,7 @@
 "use client";
 import { BackButton } from "@/components/BackButton";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { PostCard } from "@/components/PostCard";
 import type { Post } from "@/lib/types";
 
@@ -15,11 +15,50 @@ const CATEGORIES = [
 
 interface ArticlesClientProps {
   posts: Post[];
+  initialQuery: string;
+  initialCategory: string;
 }
 
-export function ArticlesClient({ posts }: ArticlesClientProps) {
-  const [activeCategory, setActiveCategory] = useState("全部");
-  const [searchQuery, setSearchQuery] = useState("");
+export function ArticlesClient({
+  posts,
+  initialQuery,
+  initialCategory,
+}: ArticlesClientProps) {
+  const allowedInitialCategory = CATEGORIES.some(
+    (category) => category.key === initialCategory,
+  )
+    ? initialCategory
+    : "全部";
+  const [activeCategory, setActiveCategory] = useState(allowedInitialCategory);
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const url = new URL(window.location.href);
+      if (searchQuery) url.searchParams.set("q", searchQuery);
+      else url.searchParams.delete("q");
+      if (activeCategory !== "全部") {
+        url.searchParams.set("category", activeCategory);
+      } else {
+        url.searchParams.delete("category");
+      }
+      window.history.replaceState({}, "", `${url.pathname}${url.search}`);
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [activeCategory, searchQuery]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const url = new URL(window.location.href);
+      const category = url.searchParams.get("category") ?? "全部";
+      setActiveCategory(
+        CATEGORIES.some((item) => item.key === category) ? category : "全部",
+      );
+      setSearchQuery(url.searchParams.get("q") ?? "");
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
@@ -37,11 +76,12 @@ export function ArticlesClient({ posts }: ArticlesClientProps) {
   }, [posts, activeCategory, searchQuery]);
 
   const existingKeys = useMemo(
-    () => new Set(posts.map((p) => p.category).filter(Boolean)),
+    () => new Set<string>(posts.map((post) => post.category)),
     [posts]
   );
   const visibleCategories = CATEGORIES.filter(
-    (c) => c.key === "全部" || existingKeys.has(c.key)
+    (category) =>
+      category.key === "全部" || existingKeys.has(category.key),
   );
 
   const activeDesc = CATEGORIES.find((c) => c.key === activeCategory)?.desc;
@@ -56,11 +96,16 @@ export function ArticlesClient({ posts }: ArticlesClientProps) {
 
       {/* Search */}
       <div className="mt-8">
+        <label htmlFor="article-search" className="sr-only">
+          搜索文章标题、摘要或标签
+        </label>
         <input
+          id="article-search"
           type="search"
           placeholder="搜索文章…"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          aria-describedby="article-results"
           className="w-full px-4 py-2.5 text-sm border border-border bg-surface text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-text-primary transition-colors"
         />
       </div>
@@ -70,7 +115,9 @@ export function ArticlesClient({ posts }: ArticlesClientProps) {
         {visibleCategories.map((cat) => (
           <button
             key={cat.key}
+            type="button"
             onClick={() => setActiveCategory(cat.key)}
+            aria-pressed={activeCategory === cat.key}
             className={`px-3 py-1.5 text-sm border transition-colors ${
               activeCategory === cat.key
                 ? "border-text-primary text-text-primary"
@@ -111,7 +158,11 @@ export function ArticlesClient({ posts }: ArticlesClientProps) {
       </div>
 
       {/* Article count */}
-      <p className="mt-6 text-xs text-text-tertiary">
+      <p
+        id="article-results"
+        className="mt-6 text-xs text-text-tertiary"
+        aria-live="polite"
+      >
         {filteredPosts.length} 篇文章
         {activeCategory !== "全部" && ` · 分类：${activeCategory}`}
         {searchQuery && ` · 搜索："${searchQuery}"`}

@@ -7,6 +7,7 @@ tech_stack: ["C++", "WebAssembly", "图算法", "HTML/CSS", "Emscripten"]
 github_url: "https://github.com/wanghongyu666qiang/The_navigation_of_hainanu_web"
 demo_url: "https://wanghongyu666qiang.github.io/The_navigation_of_hainanu_web/"
 status: "已完成"
+featured: true
 ---
 
 ## 项目背景

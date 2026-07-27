@@ -4,6 +4,7 @@ import { BackButton } from "@/components/BackButton";
 export const metadata: Metadata = {
   title: "关于",
   description: "海南大学软件工程专业在读，基于海口。构建软件、阅读论文、撰写技术文章。",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

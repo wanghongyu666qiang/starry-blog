@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "时间线",
   description: "记录有意义的里程碑，而非日常动态。",
+  alternates: { canonical: "/timeline" },
 };
 
 const TYPE_LABELS: Record<string, string> = {

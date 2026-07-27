@@ -1,157 +1,119 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { StarryLogo } from "@/components/StarryLogo";
+import type { CSSProperties, ReactNode } from "react";
+import { StarryLogo } from "./StarryLogo";
 
-const spring = "cubic-bezier(0.22, 1, 0.36, 1)";
-const dur = "600ms";
+function Reveal({
+  delay,
+  children,
+  className = "",
+}: {
+  delay: number;
+  children: ReactNode;
+  className?: string;
+}) {
+  const style = { "--reveal-delay": `${delay}ms` } as CSSProperties;
+  return (
+    <div className={`hero-reveal ${className}`} style={style}>
+      {children}
+    </div>
+  );
+}
 
 export function HeroSection() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const fadeIn = (delay: number) => ({
-    opacity: mounted ? 1 : 0,
-    transform: mounted ? "translateY(0) scale(1)" : "translateY(28px) scale(0.95)",
-    transition: `opacity ${dur} ${spring} ${delay}ms, transform ${dur} ${spring} ${delay}ms`,
-  });
-
   return (
-    <section className="mx-auto max-w-5xl px-5 sm:px-6 pt-20 sm:pt-32 pb-12 sm:pb-24 relative">
-      <div className="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-10">
-        {/* Avatar */}
-        <div className="shrink-0" style={fadeIn(0)}>
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-border bg-bg-alt">
+    <section className="relative mx-auto max-w-5xl px-5 pb-12 pt-20 sm:px-6 sm:pb-24 sm:pt-32">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-10">
+        <Reveal delay={0} className="shrink-0">
+          <div className="h-20 w-20 overflow-hidden rounded-full border-2 border-border bg-bg-alt sm:h-24 sm:w-24">
             <Image
               src="/avatar.jpg"
-              alt="Starry"
+              alt="Starry 的头像"
               width={96}
               height={96}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               priority
             />
           </div>
-        </div>
+        </Reveal>
 
-        {/* Text */}
         <div>
-          {/* Title */}
-          <h1
-            className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl"
-            style={fadeIn(150)}
-          >
-            你好，我是 Starry。
-          </h1>
-
-          {/* Sub-headline */}
-          <p
-            className="mt-4 text-lg text-text-secondary leading-relaxed max-w-xl"
-            style={fadeIn(350)}
-          >
-            Software Engineering Student
-          </p>
-          <p
-            className="mt-1 text-base text-text-secondary leading-relaxed max-w-xl"
-            style={fadeIn(550)}
-          >
-            海南大学软件工程在读。专注于 C++ WebAssembly
-            底层移植与多智能体系统（MAS）协同机制。相信好的软件始于清晰的思考与优雅的工程实践。
-          </p>
-
-          {/* Focus tags */}
-          <div className="mt-5 flex flex-wrap gap-1.5" style={fadeIn(800)}>
-            {["AI Agent", "RAG", "WebAssembly", "Developer Tools"].map(
-              (tag) => (
-                <span
-                  key={tag}
-                  className="inline-block px-2.5 py-1 text-xs text-text-secondary bg-bg-alt border border-border"
-                >
-                  {tag}
-                </span>
-              )
-            )}
-          </div>
-
-          {/* Contact */}
-          <div className="mt-6" style={fadeIn(1000)}>
-            <p className="text-xs text-text-tertiary uppercase tracking-wider mb-3">
-              Connect
+          <Reveal delay={100}>
+            <p className="mb-2 text-sm font-medium text-text-tertiary">
+              Software Engineering Student · Builder · Writer
             </p>
-            <div className="flex flex-col gap-2.5">
-              {/* GitHub */}
+            <h1 className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
+              你好，我是 Starry。
+            </h1>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-text-secondary sm:text-lg">
+              海南大学软件工程在读，专注 C++ WebAssembly
+              底层移植、多智能体系统协同机制与开发者工具。用项目验证想法，用文章沉淀思考。
+            </p>
+          </Reveal>
+
+          <Reveal delay={300}>
+            <div className="mt-5 flex flex-wrap gap-1.5">
+              {["C++", "WebAssembly", "AI Agent", "RAG", "Developer Tools"].map(
+                (tag) => (
+                  <span
+                    key={tag}
+                    className="border border-border bg-bg-alt px-2.5 py-1 text-xs text-text-secondary"
+                  >
+                    {tag}
+                  </span>
+                ),
+              )}
+            </div>
+          </Reveal>
+
+          <Reveal delay={400}>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link
+                href="/projects"
+                className="inline-flex items-center bg-text-primary px-5 py-2.5 text-sm font-medium text-text-inverse transition-transform hover:-translate-y-0.5"
+              >
+                查看项目
+              </Link>
+              <Link
+                href="/articles"
+                className="inline-flex items-center border border-border px-5 py-2.5 text-sm font-medium text-text-primary transition-colors hover:border-text-primary"
+              >
+                阅读文章
+              </Link>
+              <Link
+                href="/resume"
+                className="px-2 py-2.5 text-sm text-text-secondary transition-colors hover:text-text-primary"
+              >
+                查看简历 →
+              </Link>
+            </div>
+          </Reveal>
+
+          <Reveal delay={500}>
+            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm">
               <a
                 href="https://github.com/wanghongyu666qiang"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 text-sm text-text-primary hover:opacity-80 transition-opacity duration-200 w-fit"
+                className="text-text-secondary transition-colors hover:text-text-primary"
               >
-                <svg
-                  className="w-4 h-4 shrink-0"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                </svg>
-                github.com/wanghongyu666qiang
+                GitHub ↗
               </a>
-
-              {/* Email */}
               <a
                 href="mailto:why17573315302@gmail.com"
-                className="group inline-flex items-center gap-2 text-sm text-text-primary hover:opacity-80 transition-opacity duration-200 w-fit"
+                className="text-text-secondary transition-colors hover:text-text-primary"
               >
-                <svg
-                  className="w-4 h-4 shrink-0"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect width="20" height="16" x="2" y="4" rx="2" />
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                </svg>
-                why17573315302@gmail.com
+                Email
               </a>
             </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="mt-6 flex items-center gap-4" style={fadeIn(1200)}>
-            {/* Primary: magnetic lift + slow glow */}
-            <Link
-              href="/articles"
-              className="group relative inline-flex items-center px-5 py-2.5 text-sm font-medium bg-text-primary text-text-inverse hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 ease-out overflow-hidden"
-            >
-              {/* Slow border glow */}
-              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="absolute inset-[-2px] bg-[conic-gradient(from_0deg,transparent_60%,rgba(250,250,250,0.3)_80%,transparent_100%)] animate-[spin_4s_linear_infinite]" />
-              </span>
-              <span className="relative z-10">阅读文章</span>
-            </Link>
-
-            {/* Secondary: background slide from left */}
-            <Link
-              href="/projects"
-              className="group relative inline-flex items-center px-5 py-2.5 text-sm font-medium border border-border text-text-primary transition-all duration-300 ease-out overflow-hidden"
-            >
-              <span className="absolute inset-0 bg-text-primary scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
-              <span className="relative z-10 group-hover:text-text-inverse transition-colors duration-300">
-                查看项目
-              </span>
-            </Link>
-          </div>
+          </Reveal>
         </div>
       </div>
 
-      {/* Watermark logo */}
-      <div className="hidden lg:block absolute right-6 top-16 pointer-events-none">
+      <div className="pointer-events-none absolute right-6 top-16 hidden lg:block">
         <StarryLogo size={200} watermark />
       </div>
     </section>
