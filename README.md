@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Starry Blog
 
-## Getting Started
+Starry 的个人品牌站：项目作品集、技术文章和成长记录。
 
-First, run the development server:
+- 线上地址：[starrylovetbao.cloud](https://starrylovetbao.cloud)
+- 技术栈：Next.js 16、React 19、TypeScript、Tailwind CSS 4
+- 内容：仓库内 Markdown / JSON
+- 部署：GitHub 推送触发 Vercel Preview 或 Production
+
+## 本地开发
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+项目在 Windows 上固定使用 Webpack，避免已知的本地路径问题。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+提交前运行完整检查：
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run check
+```
 
-## Learn More
+## 内容工作流
 
-To learn more about Next.js, take a look at the following resources:
+文章、项目和时间线分别位于：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+src/content/posts/*.md
+src/content/projects/*.md
+src/content/timeline.json
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+推荐流程：
 
-## Deploy on Vercel
+1. 创建分支并编辑 Markdown。
+2. 执行 `npm run content:validate`。
+3. 推送分支并检查 Vercel Preview。
+4. 合并到 `main`，由 Vercel 自动发布。
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+网站没有线上写入后台，也不需要 `ADMIN_PASSWORD`。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 文章 frontmatter
+
+```yaml
+---
+title: "文章标题"
+description: "用于列表和搜索结果的简短摘要"
+date: "2026-07-27"
+updated: "2026-07-28" # 可选
+category: "Engineering" # Engineering | Research | Learning | Thoughts
+tags: ["Next.js", "TypeScript"]
+published: true
+featured: false
+cover: null # 可选，站内绝对路径或 https URL
+canonicalUrl: null # 可选，转载文章的原始 URL
+---
+```
+
+### 项目 frontmatter
+
+```yaml
+---
+title: "项目名称"
+description: "项目解决的问题"
+date: "2026-07-27"
+updated: "2026-07-28" # 可选
+role: "Full-stack Developer — 负责架构与实现"
+tech_stack: ["TypeScript", "Next.js"]
+github_url: "https://github.com/owner/repo"
+demo_url: null
+status: "进行中" # 草稿 | 进行中 | 已完成
+featured: true
+cover: null
+---
+```
+
+构建会拒绝无效日期、危险 URL、未知分类、非法 slug 和无 alt
+文本的 Markdown 图片。`published: false` 的文章和状态为 `草稿`
+的项目不会生成公开页面。
+
+## 站点能力
+
+- 静态文章与项目路由、真实 404
+- RSS、sitemap、robots、canonical
+- `Person`、`WebSite`、`BlogPosting`、`SoftwareSourceCode` JSON-LD
+- 动态 Open Graph 分享图
+- 服务端 Markdown、KaTeX 与代码高亮
+- 按需 Mermaid、文章目录、代码复制
+- Vercel Web Analytics 与 Speed Insights
+- CSP、HSTS 和常用安全响应头
+
+## 部署配置
+
+Vercel 项目使用 Node.js 24。主域名固定为
+`https://starrylovetbao.cloud`，`www` 域名会永久跳转到主域名。
+项目不需要运行时环境变量。

@@ -1,25 +1,39 @@
 import type { MetadataRoute } from "next";
-import { getPosts } from "@/lib/data";
+import { getPosts, getProjects } from "@/lib/data";
+import { absoluteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getPosts();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://starry.os.kg";
+  const [posts, projects] = await Promise.all([getPosts(), getProjects()]);
+  const latestContentDate = [...posts, ...projects]
+    .map((item) => item.updated_at)
+    .sort()
+    .at(-1);
 
-  const staticPages = [
-    { url: baseUrl, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 1 },
-    { url: `${baseUrl}/articles`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: `${baseUrl}/projects`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.8 },
-    { url: `${baseUrl}/timeline`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
-    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
-    { url: `${baseUrl}/resume`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
+  const staticModified = latestContentDate
+    ? new Date(`${latestContentDate}T00:00:00Z`)
+    : new Date("2026-07-27T00:00:00Z");
+  const staticPages: MetadataRoute.Sitemap = [
+    { url: absoluteUrl("/"), lastModified: staticModified, changeFrequency: "weekly", priority: 1 },
+    { url: absoluteUrl("/articles"), lastModified: staticModified, changeFrequency: "weekly", priority: 0.9 },
+    { url: absoluteUrl("/projects"), lastModified: staticModified, changeFrequency: "monthly", priority: 0.9 },
+    { url: absoluteUrl("/timeline"), lastModified: staticModified, changeFrequency: "monthly", priority: 0.6 },
+    { url: absoluteUrl("/about"), lastModified: new Date("2026-07-27T00:00:00Z"), changeFrequency: "monthly", priority: 0.6 },
+    { url: absoluteUrl("/resume"), lastModified: new Date("2026-07-27T00:00:00Z"), changeFrequency: "monthly", priority: 0.6 },
   ];
 
-  const postPages = posts.map((post) => ({
-    url: `${baseUrl}/articles/${post.slug}`,
-    lastModified: new Date(post.updated_at || post.created_at),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
+  const postPages: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: absoluteUrl(`/articles/${post.slug}`),
+    lastModified: new Date(`${post.updated_at}T00:00:00Z`),
+    changeFrequency: "monthly",
+    priority: 0.7,
   }));
 
-  return [...staticPages, ...postPages];
+  const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({
+    url: absoluteUrl(`/projects/${project.slug}`),
+    lastModified: new Date(`${project.updated_at}T00:00:00Z`),
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...postPages, ...projectPages];
 }

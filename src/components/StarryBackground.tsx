@@ -1,48 +1,43 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
 const STARS = [
-  { x: 5, y: 8, s: 2, o: 0.15 },
-  { x: 18, y: 5, s: 1, o: 0.08 },
-  { x: 35, y: 14, s: 2, o: 0.12 },
-  { x: 52, y: 6, s: 1.5, o: 0.09 },
-  { x: 70, y: 12, s: 1, o: 0.07 },
-  { x: 88, y: 9, s: 2, o: 0.11 },
-  { x: 12, y: 28, s: 1, o: 0.06 },
-  { x: 42, y: 32, s: 1.5, o: 0.08 },
-  { x: 78, y: 35, s: 2, o: 0.10 },
-  { x: 92, y: 25, s: 1, o: 0.07 },
-  { x: 25, y: 55, s: 1.5, o: 0.09 },
-  { x: 60, y: 60, s: 1, o: 0.06 },
-  { x: 8, y: 75, s: 2, o: 0.11 },
-  { x: 85, y: 72, s: 1, o: 0.07 },
-  { x: 45, y: 85, s: 1.5, o: 0.08 },
-  { x: 95, y: 90, s: 2, o: 0.10 },
-  { x: 15, y: 93, s: 1, o: 0.06 },
-];
+  [5, 8, 2, 0.15],
+  [18, 5, 1, 0.08],
+  [35, 14, 2, 0.12],
+  [52, 6, 1.5, 0.09],
+  [70, 12, 1, 0.07],
+  [88, 9, 2, 0.11],
+  [12, 28, 1, 0.06],
+  [42, 32, 1.5, 0.08],
+  [78, 35, 2, 0.1],
+  [92, 25, 1, 0.07],
+  [25, 55, 1.5, 0.09],
+  [60, 60, 1, 0.06],
+  [8, 75, 2, 0.11],
+  [85, 72, 1, 0.07],
+  [45, 85, 1.5, 0.08],
+  [95, 90, 2, 0.1],
+  [15, 93, 1, 0.06],
+] as const;
 
 export function StarryBackground() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-
-  if (!mounted) return null;
-
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden starry-bg" aria-hidden="true">
-      {STARS.map((star, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full starry-dot"
+    <div
+      className="starry-bg pointer-events-none fixed inset-0 overflow-hidden"
+      aria-hidden="true"
+    >
+      {STARS.map(([x, y, size, opacity], index) => (
+        <span
+          key={`${x}-${y}`}
+          className="starry-dot absolute rounded-full"
           style={{
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            width: `${star.s}px`,
-            height: `${star.s}px`,
-            opacity: star.o,
-            background: `radial-gradient(circle, rgba(255,215,106,0.6) 0%, transparent 70%)`,
-            animationDuration: `${3 + (i % 4)}s`,
-            animationDelay: `${(i * 0.6).toFixed(1)}s`,
+            left: `${x}%`,
+            top: `${y}%`,
+            width: `${size}px`,
+            height: `${size}px`,
+            opacity,
+            background:
+              "radial-gradient(circle, rgba(255,215,106,0.6) 0%, transparent 70%)",
+            animationDuration: `${3 + (index % 4)}s`,
+            animationDelay: `${(index * 0.6).toFixed(1)}s`,
           }}
         />
       ))}

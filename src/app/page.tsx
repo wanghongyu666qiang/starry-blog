@@ -1,26 +1,70 @@
 import type { Metadata } from "next";
-import { getPosts, getProjects, getTimeline } from "@/lib/data";
+import {
+  getFeaturedPosts,
+  getFeaturedProjects,
+  getTimeline,
+} from "@/lib/data";
 import { HeroSection } from "@/components/HeroSection";
 import { PostCard } from "@/components/PostCard";
 import { ProjectCard } from "@/components/ProjectCard";
 import { TimelinePreview } from "@/components/TimelinePreview";
+import { JsonLd } from "@/components/JsonLd";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 import Link from "next/link";
 
 export const metadata: Metadata = {
   description: "海南大学软件工程专业在读。构建智能工具与有意义的软件。",
+  alternates: { canonical: "/" },
 };
 
 export default async function Home() {
-  const projects = await getProjects();
-  const posts = await getPosts();
-  const timeline = await getTimeline();
-
-  const featuredProjects = projects.slice(0, 3);
-  const latestArticles = posts.slice(0, 3);
+  const [featuredProjects, latestArticles, timeline] = await Promise.all([
+    getFeaturedProjects(3),
+    getFeaturedPosts(3),
+    getTimeline(),
+  ]);
   const timelinePreview = timeline.slice(0, 5);
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: siteConfig.author.name,
+          url: siteConfig.url,
+          email: `mailto:${siteConfig.author.email}`,
+          sameAs: [siteConfig.author.github],
+          affiliation: {
+            "@type": "CollegeOrUniversity",
+            name: "海南大学",
+          },
+          knowsAbout: [
+            "C++",
+            "WebAssembly",
+            "Multi-Agent Systems",
+            "Retrieval-Augmented Generation",
+          ],
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: siteConfig.name,
+          url: siteConfig.url,
+          inLanguage: siteConfig.language,
+          publisher: {
+            "@type": "Person",
+            name: siteConfig.author.name,
+          },
+          potentialAction: {
+            "@type": "SearchAction",
+            target: `${absoluteUrl("/articles")}?q={search_term_string}`,
+            "query-input": "required name=search_term_string",
+          },
+        }}
+      />
       {/* Hero */}
       <HeroSection />
 

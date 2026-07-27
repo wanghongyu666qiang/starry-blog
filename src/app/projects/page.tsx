@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "项目",
   description: "真实的软件项目。每个项目都解释了为什么做、怎么做、以及收获了什么。",
+  alternates: { canonical: "/projects" },
 };
 
 export default async function ProjectsPage() {

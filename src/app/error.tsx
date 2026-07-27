@@ -8,7 +8,10 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   return (
-    <div className="flex-1 flex items-center justify-center px-6">
+    <div
+      className="flex-1 flex items-center justify-center px-6"
+      data-error-digest={error.digest}
+    >
       <div className="text-center">
         <p className="text-sm text-text-tertiary">500</p>
         <h1 className="mt-2 text-2xl font-semibold text-text-primary">出了点问题</h1>

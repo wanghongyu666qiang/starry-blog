@@ -4,6 +4,7 @@ import { BackButton } from "@/components/BackButton";
 export const metadata: Metadata = {
   title: "简历",
   description: "在线简历 — 教育背景、项目经历、技能。",
+  alternates: { canonical: "/resume" },
 };
 
 export default function ResumePage() {

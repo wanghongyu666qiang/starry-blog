@@ -1,24 +1,36 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { AdminFab } from "@/components/AdminFab";
 import { BackToTop } from "@/components/BackToTop";
 import { StarryBackground } from "@/components/StarryBackground";
+import { siteConfig, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Starry — 个人网站",
+    default: siteConfig.title,
     template: "%s — Starry",
   },
-  description: "海南大学软件工程专业在读。技术文章、项目展示、学习记录。",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://starry.os.kg"),
+  description: siteConfig.description,
+  metadataBase: new URL(SITE_URL),
+  authors: [{ name: siteConfig.author.name, url: siteConfig.author.github }],
+  creator: siteConfig.author.name,
+  publisher: siteConfig.author.name,
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Starry — 个人网站",
-    description: "海南大学软件工程专业在读。技术文章、项目展示、学习记录。",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: SITE_URL,
+    siteName: siteConfig.name,
     type: "website",
-    locale: "zh_CN",
+    locale: siteConfig.locale,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
   },
   robots: {
     index: true,
@@ -32,11 +44,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className="h-full">
+    <html
+      lang="zh-CN"
+      className="h-full"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <head>
         <script
+          id="theme-bootstrap"
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('starry-theme')||'warm';document.documentElement.setAttribute('data-theme',t)})()`,
+            __html:
+              '(function(){try{var t=localStorage.getItem("starry-theme")||"warm";document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme="warm"}})();',
           }}
         />
       </head>
@@ -51,9 +70,13 @@ export default function RootLayout({
         <Header />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
-        <AdminFab />
         <BackToTop />
-        <Analytics />
+        {process.env.VERCEL ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
       </body>
     </html>
   );

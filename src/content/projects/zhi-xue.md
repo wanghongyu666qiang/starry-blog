@@ -7,6 +7,7 @@ tech_stack: ["TypeScript", "Python", "FastAPI", "LightRAG", "Ollama", "Obsidian 
 github_url: "https://github.com/wanghongyu666qiang/---obsidian-rag-"
 demo_url: null
 status: "已完成"
+featured: true
 ---
 
 ## 项目背景
