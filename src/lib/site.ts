@@ -1,4 +1,4 @@
-export const SITE_URL = "https://starrylovetbao.cloud";
+export const SITE_URL = "https://www.starrylovetbao.cloud";
 
 export const siteConfig = {
   name: "Starry",

@@ -2,7 +2,7 @@
 
 Starry 的个人品牌站：项目作品集、技术文章和成长记录。
 
-- 线上地址：[starrylovetbao.cloud](https://starrylovetbao.cloud)
+- 线上地址：[www.starrylovetbao.cloud](https://www.starrylovetbao.cloud)
 - 技术栈：Next.js 16、React 19、TypeScript、Tailwind CSS 4
 - 内容：仓库内 Markdown / JSON
 - 部署：GitHub 推送触发 Vercel Preview 或 Production
@@ -94,5 +94,5 @@ cover: null
 ## 部署配置
 
 Vercel 项目使用 Node.js 24。主域名固定为
-`https://starrylovetbao.cloud`，`www` 域名会永久跳转到主域名。
+`https://www.starrylovetbao.cloud`，根域名会永久跳转到 `www` 主域名。
 项目不需要运行时环境变量。

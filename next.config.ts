@@ -37,16 +37,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
-  async redirects() {
-    return [
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "www.starrylovetbao.cloud" }],
-        destination: "https://starrylovetbao.cloud/:path*",
-        permanent: true,
-      },
-    ];
-  },
 };
 
 export default nextConfig;
