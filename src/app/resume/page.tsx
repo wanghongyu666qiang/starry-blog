@@ -66,6 +66,29 @@ export default function ResumePage() {
         </div>
       </section>
 
+      {/* Certifications */}
+      <section className="mt-12">
+        <h2 className="text-lg font-semibold text-text-primary border-b border-border pb-2">
+          证书与认证
+        </h2>
+        <div className="mt-4">
+          <div className="flex justify-between items-baseline gap-4">
+            <div>
+              <h3 className="font-medium text-text-primary">
+                Red Hat Certified System Administrator (RHCSA)
+              </h3>
+              <p className="text-sm text-text-secondary">Red Hat</p>
+              <p className="mt-1 text-xs text-text-tertiary">
+                Certification ID: 260-076-591
+              </p>
+            </div>
+            <span className="shrink-0 text-sm text-text-tertiary">
+              2026-06-07
+            </span>
+          </div>
+        </div>
+      </section>
+
       {/* Skills */}
       <section className="mt-12">
         <h2 className="text-lg font-semibold text-text-primary border-b border-border pb-2">
