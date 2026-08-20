@@ -4,11 +4,10 @@ import matter from "gray-matter";
 import {
   postFrontmatterSchema,
   projectFrontmatterSchema,
-  timelineSchema,
   validateMarkdownImages,
   validateSlug,
 } from "./content-schema";
-import type { Post, Project, TimelineEvent } from "./types";
+import type { Post, Project } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content");
 
@@ -169,17 +168,6 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   return project.status === "草稿" ? null : project;
 }
 
-export async function getTimeline(): Promise<TimelineEvent[]> {
-  const filePath = path.join(CONTENT_DIR, "timeline.json");
-  if (!fs.existsSync(filePath)) return [];
-  const events = timelineSchema.parse(
-    JSON.parse(fs.readFileSync(filePath, "utf-8")),
-  );
-  return events.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
-}
-
 export async function validateAllContent(): Promise<void> {
-  await Promise.all([getPosts(), getProjects(), getTimeline()]);
+  await Promise.all([getPosts(), getProjects()]);
 }

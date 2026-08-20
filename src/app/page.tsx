@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
-import {
-  getFeaturedPosts,
-  getFeaturedProjects,
-  getTimeline,
-} from "@/lib/data";
+import { getFeaturedPosts, getFeaturedProjects } from "@/lib/data";
 import { HeroSection } from "@/components/HeroSection";
 import { PostCard } from "@/components/PostCard";
 import { ProjectCard } from "@/components/ProjectCard";
-import { TimelinePreview } from "@/components/TimelinePreview";
 import { JsonLd } from "@/components/JsonLd";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import Link from "next/link";
@@ -18,12 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [featuredProjects, latestArticles, timeline] = await Promise.all([
+  const [featuredProjects, latestArticles] = await Promise.all([
     getFeaturedProjects(3),
     getFeaturedPosts(3),
-    getTimeline(),
   ]);
-  const timelinePreview = timeline.slice(0, 5);
 
   return (
     <>
@@ -119,20 +112,6 @@ export default async function Home() {
             />
           ))}
         </div>
-      </section>
-
-      {/* Timeline Preview */}
-      <section className="mx-auto max-w-5xl px-5 sm:px-6 pb-16 sm:pb-24">
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
-          <h2 className="text-xl font-semibold text-text-primary">时间线</h2>
-          <Link
-            href="/timeline"
-            className="text-sm text-text-tertiary hover:text-text-primary transition-colors"
-          >
-            完整时间线 &rarr;
-          </Link>
-        </div>
-        <TimelinePreview events={timelinePreview} />
       </section>
     </>
   );

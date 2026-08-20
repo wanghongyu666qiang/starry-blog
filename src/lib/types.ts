@@ -45,19 +45,6 @@ export interface Project {
   updated_at: string;
 }
 
-export interface TimelineEvent {
-  id: string;
-  title: string;
-  description: string | null;
-  date: string;
-  type: string;
-  link: string | null;
-  created_at: string;
-  context?: string;
-  what_did?: string;
-  learned?: string;
-}
-
 export interface TocHeading {
   id: string;
   text: string;

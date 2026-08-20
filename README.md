@@ -4,7 +4,7 @@ Starry 的个人品牌站：项目作品集、技术文章和成长记录。
 
 - 线上地址：[www.starrylovetbao.cloud](https://www.starrylovetbao.cloud)
 - 技术栈：Next.js 16、React 19、TypeScript、Tailwind CSS 4
-- 内容：仓库内 Markdown / JSON
+- 内容：仓库内 Markdown
 - 部署：GitHub 推送触发 Vercel Preview 或 Production
 
 ## 本地开发
@@ -24,17 +24,16 @@ npm run check
 
 ## 内容工作流
 
-文章、项目和时间线分别位于：
+文章和项目分别位于：
 
 ```text
 src/content/posts/*.md
 src/content/projects/*.md
-src/content/timeline.json
 ```
 
 推荐流程：
 
-1. 创建分支并编辑 Markdown 或 JSON 内容。
+1. 创建分支并编辑 Markdown 内容。
 2. 执行 `npm run content:validate`。
 3. 执行 `npm run check`。
 4. 推送分支并检查 Vercel Preview。
@@ -66,10 +65,6 @@ my-new-post.md
 - 当前状态
 
 状态为 `草稿` 的项目不会生成公开页面。
-
-### 更新时间线
-
-编辑 `src/content/timeline.json`。提交前必须确保 JSON 格式合法，避免多余逗号、缺失引号或括号不匹配导致构建失败。
 
 ### 更新图片与静态资源
 
@@ -108,7 +103,7 @@ https://www.starrylovetbao.cloud
 - `npm run content:validate` 通过
 - `npm run check` 通过
 - Vercel Preview 页面能正常打开
-- 文章、项目、时间线页面没有 404
+- 文章和项目页面没有 404
 - 生产站点没有重定向循环
 
 ## 文章 frontmatter

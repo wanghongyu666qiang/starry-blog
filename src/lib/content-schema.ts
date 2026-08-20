@@ -54,23 +54,6 @@ export const projectFrontmatterSchema = z
   })
   .strict();
 
-export const timelineEventSchema = z
-  .object({
-    id: z.string().min(1),
-    title: z.string().trim().min(2),
-    description: z.string().nullable(),
-    date: isoDate,
-    type: z.string().trim().min(1),
-    link: z.string().startsWith("/").nullable(),
-    created_at: isoDate,
-    context: z.string().optional(),
-    what_did: z.string().optional(),
-    learned: z.string().optional(),
-  })
-  .strict();
-
-export const timelineSchema = z.array(timelineEventSchema);
-
 export function validateSlug(slug: string): void {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
     throw new Error(`无效 slug: "${slug}"，仅允许小写字母、数字和连字符`);
