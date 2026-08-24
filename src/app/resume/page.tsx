@@ -36,6 +36,35 @@ export default function ResumePage() {
         <div className="mt-4 space-y-6">
           <div>
             <div className="flex justify-between items-baseline">
+              <h3 className="font-medium text-text-primary">AskBridge</h3>
+              <span className="text-sm text-text-tertiary">2026</span>
+            </div>
+            <p className="mt-1 text-sm text-text-secondary">
+              Windows 原生截图问答工具，使用 Rust/Win32 实现全局快捷键、截图覆盖层与托盘设置，
+              并通过 Chrome CDP 将截图和文字准备到多个 AI 网页输入区。不自动发送，
+              最终操作由用户确认；已公开发布 1.0.0 安装版与便携版。
+            </p>
+            <p className="mt-1 text-xs text-text-tertiary">
+              Rust &middot; Win32 &middot; Chrome CDP &middot; WebView2 &middot; GitHub Actions
+            </p>
+          </div>
+          <div>
+            <div className="flex justify-between items-baseline">
+              <h3 className="font-medium text-text-primary">智学 (ZhiXue)</h3>
+              <span className="text-sm text-text-tertiary">2026</span>
+            </div>
+            <p className="mt-1 text-sm text-text-secondary">
+              Obsidian AI 知识助手，由 TypeScript 插件与 Python/FastAPI 后端组成，
+              使用 LightRAG 图算法构建知识图谱并检索个人笔记，支持本地 Ollama 与云端
+              SiliconFlow 模型切换。
+            </p>
+            <p className="mt-1 text-xs text-text-tertiary">
+              TypeScript &middot; Python &middot; FastAPI &middot; LightRAG &middot; Ollama &middot;
+              Obsidian Plugin
+            </p>
+          </div>
+          <div>
+            <div className="flex justify-between items-baseline">
               <h3 className="font-medium text-text-primary">
                 海南大学导航系统
               </h3>
@@ -48,19 +77,6 @@ export default function ResumePage() {
             </p>
             <p className="mt-1 text-xs text-text-tertiary">
               C++ &middot; WebAssembly &middot; 图算法 &middot; Emscripten
-            </p>
-          </div>
-          <div>
-            <div className="flex justify-between items-baseline">
-              <h3 className="font-medium text-text-primary">智能开支追踪器</h3>
-              <span className="text-sm text-text-tertiary">2026</span>
-            </div>
-            <p className="mt-1 text-sm text-text-secondary">
-              Vue 3 个人财务应用，支持分类管理、预算提醒与交互式数据可视化。
-              8 项核心功能对照项目需求文档验证。
-            </p>
-            <p className="mt-1 text-xs text-text-tertiary">
-              Vue 3 &middot; TypeScript &middot; Chart.js &middot; Pinia
             </p>
           </div>
         </div>
@@ -97,7 +113,9 @@ export default function ResumePage() {
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
             <h3 className="text-sm font-medium text-text-secondary">编程语言</h3>
-            <p className="mt-1 text-sm text-text-tertiary">C/C++、TypeScript、JavaScript、Python</p>
+            <p className="mt-1 text-sm text-text-tertiary">
+              Rust、C/C++、TypeScript、JavaScript、Python
+            </p>
           </div>
           <div>
             <h3 className="text-sm font-medium text-text-secondary">前端</h3>
