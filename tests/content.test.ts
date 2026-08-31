@@ -13,6 +13,8 @@ import {
   validateSlug,
 } from "../src/lib/content-schema";
 import { absoluteUrl, SITE_URL } from "../src/lib/site";
+import { COLUMNS, getColumnBySlug, getPostsForColumn } from "../src/lib/columns";
+import type { Post } from "../src/lib/types";
 
 describe("内容契约", () => {
   it("所有仓库内容都能通过严格校验", async () => {
@@ -58,5 +60,37 @@ describe("内容契约", () => {
   it("计算阅读时间并生成固定主域名 URL", () => {
     expect(computeReadingTime("中文内容".repeat(200))).toBe(2);
     expect(absoluteUrl("/articles/test")).toBe(`${SITE_URL}/articles/test`);
+  });
+
+  it("专栏配置使用唯一 slug，并按标签收录文章", () => {
+    expect(new Set(COLUMNS.map((column) => column.slug)).size).toBe(
+      COLUMNS.length,
+    );
+
+    const algorithms = getColumnBySlug("algorithms");
+    expect(algorithms).toBeDefined();
+
+    const basePost: Post = {
+      id: "sample",
+      slug: "sample",
+      title: "示例文章",
+      description: "这是一篇用于测试专栏匹配的示例文章。",
+      content: "",
+      cover: null,
+      canonical_url: null,
+      category: "Learning",
+      tags: ["算法"],
+      published: true,
+      featured: false,
+      created_at: "2026-08-31",
+      updated_at: "2026-08-31",
+      reading_time: 1,
+      difficulty: "入门",
+    };
+
+    expect(getPostsForColumn([basePost], algorithms!)).toEqual([basePost]);
+    expect(
+      getPostsForColumn([{ ...basePost, tags: ["C++"] }], algorithms!),
+    ).toEqual([]);
   });
 });

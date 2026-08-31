@@ -15,8 +15,12 @@ describe("发现与分享", () => {
     expect(xml).toContain(`${SITE_URL}/articles/`);
   });
 
-  it("sitemap 包含文章和项目详情", async () => {
+  it("sitemap 包含主要页面、文章和项目详情", async () => {
     const entries = await sitemap();
+    expect(entries.some((entry) => entry.url.endsWith("/columns"))).toBe(true);
+    expect(
+      entries.some((entry) => entry.url.endsWith("/columns/algorithms")),
+    ).toBe(true);
     expect(entries.some((entry) => entry.url.includes("/articles/"))).toBe(true);
     expect(entries.some((entry) => entry.url.includes("/projects/"))).toBe(true);
     expect(entries.every((entry) => entry.url.startsWith(SITE_URL))).toBe(true);

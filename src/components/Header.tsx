@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/", label: "首页" },
   { href: "/projects", label: "项目" },
   { href: "/articles", label: "文章" },
+  { href: "/columns", label: "专栏" },
   { href: "/about", label: "关于" },
   { href: "/resume", label: "简历" },
 ];

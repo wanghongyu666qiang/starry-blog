@@ -66,6 +66,12 @@ my-new-post.md
 
 状态为 `草稿` 的项目不会生成公开页面。
 
+### 更新专栏
+
+专栏聚合页位于 `/columns`，配置位于 `src/lib/columns.ts`。“算法札记”位于 `/columns/algorithms`，面向 LeetCode 面试，默认使用 C++。
+
+算法专栏文章仍保存在 `src/content/posts/*.md`：使用现有文章 frontmatter，并在 `tags` 中加入 `算法`。只有 `published: true` 的匹配文章会出现在专栏页，未完成草稿保持隐藏。
+
 ### 更新图片与静态资源
 
 静态资源放在 `public/` 下。Markdown 中引用站内资源时优先使用站内绝对路径，例如：
@@ -103,7 +109,7 @@ https://www.starrylovetbao.cloud
 - `npm run content:validate` 通过
 - `npm run check` 通过
 - Vercel Preview 页面能正常打开
-- 文章和项目页面没有 404
+- 文章、项目和专栏页面没有 404
 - 生产站点没有重定向循环
 
 ## 文章 frontmatter
@@ -146,6 +152,7 @@ cover: null
 ## 站点能力
 
 - 静态文章与项目路由、真实 404
+- 主题专栏聚合页与算法学习路线
 - RSS、sitemap、robots、canonical
 - `Person`、`WebSite`、`BlogPosting`、`SoftwareSourceCode` JSON-LD
 - 动态 Open Graph 分享图
