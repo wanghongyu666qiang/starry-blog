@@ -1,10 +1,10 @@
 ---
 title: "AskBridge"
-description: "Windows 原生截图问答工具：用全局快捷键截取屏幕内容并准备到 AI 网页输入区，以隐私边界和手动确认发送为核心。"
+description: "Windows 原生截图问答工具：用全局快捷键截取屏幕并安全准备到多个 AI 网页，支持附件状态校验与签名更新，始终由用户确认发送。"
 date: "2026-08-13"
-updated: "2026-08-24"
-role: "Independent Developer — 负责产品设计、Rust/Win32 客户端、Chrome CDP 自动化、安全边界、安装打包与发布验收"
-tech_stack: ["Rust", "Win32", "Chrome DevTools Protocol", "WebView2", "PowerShell", "GitHub Actions"]
+updated: "2026-08-31"
+role: "Independent Developer — 负责产品设计、Rust/Win32 客户端、浏览器与桌面端自动化、安全更新、安装打包及发布验收"
+tech_stack: ["Rust", "Win32", "Chrome DevTools Protocol", "WebView2", "Ed25519", "GitHub Actions"]
 github_url: "https://github.com/wanghongyu666qiang/AskBridge"
 status: "已完成"
 featured: true
@@ -20,7 +20,9 @@ featured: true
 - `Alt+Shift+Q`：使用默认模型和快速提示词准备截图内容
 - `Alt+W`：打开默认模型网页，进行纯文字提问
 
-当前源码支持 ChatGPT、Gemini、Claude、豆包和自定义 HTTPS 供应商。用户可以选择 AskBridge 专用 Chrome、已有桌面网页端或通用粘贴路径，在自动化能力与登录复用之间做取舍。
+当前代码版本为 **2.0.1**，支持 ChatGPT、Gemini、Claude、豆包、DeepSeek、智谱清言（GLM）、Kimi 和自定义 HTTPS 供应商。重新设计的截图工具条可以直接切换模型、复制截图或确认准备；模型选择会保存为下一次的默认项。
+
+浏览器侧提供四种可选路径：已有桌面网页端、AskBridge 专用 Chrome、通用粘贴，以及“专用 Chrome 优先，安全失败后通用粘贴”。桌面网页端和通用粘贴会在唯一输入区附近检测稳定的新附件结构；一旦已经执行粘贴但附件状态仍不确定，程序会停止并提示用户检查，不会猜测重试。
 
 ## 系统架构
 
@@ -30,18 +32,22 @@ featured: true
 - **askbridge-win**：实现托盘程序、截图覆盖层、原生设置界面、浏览器生命周期与供应商适配
 - **xtask**：承载发布产物、哈希和性能报告等可测试的工程校验逻辑
 
-自动准备网页时，AskBridge 通过 Chrome DevTools Protocol 维护持久连接与 Target Session，定位可编辑输入区并上传临时截图。页面、附件或目标状态不明确时会停止操作，避免猜测点击或重复写入。
+自动准备网页时，AskBridge 通过 Chrome DevTools Protocol 维护持久连接与 Target Session，定位可编辑输入区并上传临时截图。桌面网页端和受支持的 AI 客户端则通过窗口聚焦、单次粘贴和附件回执校验完成准备。页面、附件或目标状态不明确时会停止操作，避免猜测点击、重复粘贴或部分写入后切换路径。
 
 ## 隐私与安全边界
 
 AskBridge 不调用模型 API，也不运行本地模型；不会读取密码、Cookie、网页正文或历史对话。日志只记录阶段、耗时和错误类别，不保存问题原文、截图内容或完整聊天 URL。所有请求的 `auto_submit` 固定为 `false`，工具只负责准备内容，最终发送始终由用户决定。
 
-专用 Chrome 使用独立浏览器配置，不连接日常 Chrome 数据。需要临时落盘的截图会保存在 AskBridge 数据目录中，并在操作完成、失败或取消后删除。
+专用 Chrome 使用独立浏览器配置，不连接日常 Chrome 数据。需要临时落盘的截图会保存在 AskBridge 数据目录中，并在操作完成、失败或取消后删除；更新缓存也会在使用后或下次启动时清理。
+
+## 安全更新
+
+安装版会在启动时及每 24 小时检查一次 GitHub Releases，也可以从托盘手动检查。发现新版本后，只有在用户确认时才会下载安装包；客户端会同时核对 SHA-256 与维护者的离线 Ed25519 签名，再正常退出、原位置升级并重新启动。更新保留现有 `data`，失败时恢复原程序；便携版只提示新版本，由用户手动替换文件。
 
 ## 工程化与发布
 
-项目提供 Windows CI、格式检查、严格 Clippy、workspace 测试、Release 构建、安装包与便携包验证，以及真实 UI/浏览器流程的验收脚本。[AskBridge 1.0.0](https://github.com/wanghongyu666qiang/AskBridge/releases/tag/v1.0.0) 已通过 GitHub Releases 发布，提供 Windows 安装程序、便携 ZIP 与 SHA-256 校验文件，并以 Apache License 2.0 开源；当前 `main` 分支仍在继续迭代，部分新能力会早于下载版本。
+项目提供 Windows CI、最低 Rust 版本检查、格式检查、严格 Clippy、workspace 测试、Release 构建、安装包与便携包验证，以及真实 UI/浏览器流程的验收脚本。普通提交只运行 CI；与版本号一致的标签才触发发布流程，重新完成 MSVC 校验并生成安装程序、便携 ZIP、SHA-256 清单和离线签名。[AskBridge 2.0.1](https://github.com/wanghongyu666qiang/AskBridge/releases/tag/v2.0.1) 已作为公开 Release 发布，并以 Apache License 2.0 开源。
 
 ## 项目反思
 
-这个项目最难的部分不是“把图片放进网页”，而是在网页结构变化、浏览器状态不确定和多种登录方式并存时仍然保持可解释、可恢复且不误发送。开发过程中，我逐步把“失败时不猜测”和“发送权始终属于用户”落实为跨配置、运行时、打包与验收的系统约束。这让我更深入地理解了 Windows 原生开发、浏览器自动化与安全边界设计之间的关系。
+这个项目最难的部分不是“把图片放进网页”，而是在网页结构变化、浏览器与桌面客户端状态不确定、多种登录方式并存时，仍然保持可解释、可恢复且不误发送。开发过程中，我把“失败时不猜测”“发送权始终属于用户”从交互原则推进为跨配置、运行时、更新、打包与验收的系统约束，也把软件更新从单纯下载提升为一条可验证的信任链。这让我更深入地理解了 Windows 原生开发、浏览器自动化与安全交付之间的关系。

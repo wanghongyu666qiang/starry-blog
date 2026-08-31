@@ -40,12 +40,12 @@ export default function ResumePage() {
               <span className="text-sm text-text-tertiary">2026</span>
             </div>
             <p className="mt-1 text-sm text-text-secondary">
-              Windows 原生截图问答工具，使用 Rust/Win32 实现全局快捷键、截图覆盖层与托盘设置，
-              并通过 Chrome CDP 将截图和文字准备到多个 AI 网页输入区。不自动发送，
-              最终操作由用户确认；已公开发布 1.0.0 安装版与便携版。
+              Windows 原生截图问答工具，使用 Rust/Win32 实现全局快捷键、截图工具条与托盘设置，
+              通过 Chrome CDP 和安全粘贴路径将截图准备到多个 AI 网页或桌面客户端。
+              支持附件状态校验与签名更新，不自动发送；已公开提供安装版与便携版。
             </p>
             <p className="mt-1 text-xs text-text-tertiary">
-              Rust &middot; Win32 &middot; Chrome CDP &middot; WebView2 &middot; GitHub Actions
+              Rust &middot; Win32 &middot; Chrome CDP &middot; WebView2 &middot; Ed25519
             </p>
           </div>
           <div>
